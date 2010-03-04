@@ -7,3 +7,12 @@ C:\Users\jconroy2\dev\Jerry Sanders 2010\Jerry Sanders 2010\bin\Debug\Jerry Sand
 C:\Users\jconroy2\dev\Jerry Sanders 2010\Jerry Sanders 2010\bin\Debug\WiimoteLib.dll
 C:\Users\jconroy2\dev\Jerry Sanders 2010\Jerry Sanders 2010\obj\Debug\Jerry Sanders 2010.exe
 C:\Users\jconroy2\dev\Jerry Sanders 2010\Jerry Sanders 2010\obj\Debug\Jerry Sanders 2010.pdb
+C:\Users\jconroy2\dev\SIGBot-Jerry-Sanders\Jerry Sanders 2010\Jerry Sanders 2010\obj\Debug\Jerry Sanders 2010.exe
+C:\Users\jconroy2\dev\SIGBot-Jerry-Sanders\Jerry Sanders 2010\Jerry Sanders 2010\obj\Debug\Jerry Sanders 2010.pdb
+C:\Users\jconroy2\dev\SIGBot-Jerry-Sanders\Jerry Sanders 2010\Jerry Sanders 2010\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jconroy2\dev\SIGBot-Jerry-Sanders\Jerry Sanders 2010\Jerry Sanders 2010\obj\Debug\Jerry_Sanders_2010.jerry5Form.resources
+C:\Users\jconroy2\dev\SIGBot-Jerry-Sanders\Jerry Sanders 2010\Jerry Sanders 2010\obj\Debug\Jerry_Sanders_2010.Properties.Resources.resources
+C:\Users\jconroy2\dev\SIGBot-Jerry-Sanders\Jerry Sanders 2010\Jerry Sanders 2010\obj\Debug\Jerry Sanders 2010.csproj.GenerateResource.Cache
+C:\Users\jconroy2\dev\SIGBot-Jerry-Sanders\Jerry Sanders 2010\Jerry Sanders 2010\bin\Debug\Jerry Sanders 2010.exe
+C:\Users\jconroy2\dev\SIGBot-Jerry-Sanders\Jerry Sanders 2010\Jerry Sanders 2010\bin\Debug\Jerry Sanders 2010.pdb
+C:\Users\jconroy2\dev\SIGBot-Jerry-Sanders\Jerry Sanders 2010\Jerry Sanders 2010\bin\Debug\WiimoteLib.dll

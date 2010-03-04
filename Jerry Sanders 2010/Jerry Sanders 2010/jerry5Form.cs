@@ -173,18 +173,18 @@ namespace Jerry_Sanders_2010
 			int gripper, int cutter)
 		{
 			// temporary motor variables (as single bytes)
-			char byteA, byteB, byteC, byteD, byte1, byte2, byte3, byteGripCut;
-
+			char[] motorBytes = new char[8];
+			
 			// Buffer string to send over serial port
 			string motorString = "";
 
 			// Check that motor A is in the correct range
 			if ((motorA <= 90) && (motorA >= -90))
 			{
-				byteA = (char)(motorA + 90);  // actual legit values for the motor range from
+				motorBytes[0] = (char)(motorA + 90);  // actual legit values for the motor range from
 				                      // 0 to 180, so shift by 90.
 
-				motorString += byteA;
+				//motorString += byteA;
 			}
 			else
 				return -1;
@@ -192,10 +192,10 @@ namespace Jerry_Sanders_2010
 			// Check that motor B is in the correct range
 			if ((motorB <= 90) && (motorB >= -90))
 			{
-				byteB = (char)(motorB + 90);  // actual legit values for the motor range from
+				motorBytes[1] = (char)(motorB + 90);  // actual legit values for the motor range from
 				                      // 0 to 180, so shift by 90.
 
-				motorString += byteB;
+				//motorString += byteB;
 			}
 			else
 				return -1;
@@ -203,9 +203,9 @@ namespace Jerry_Sanders_2010
 			// Check that motor C is in the correct range
 			if ((motorC <= 90) && (motorC >= -90))
 			{
-				byteC = (char)(motorC + 90);  // actual legit values for the motor range from
+				motorBytes[2] = (char)(motorC + 90);  // actual legit values for the motor range from
 				                      // 0 to 180, so shift by 90.
-				motorString += byteC;
+				//motorString += byteC;
 			}
 			else
 				return -1;
@@ -213,9 +213,9 @@ namespace Jerry_Sanders_2010
 			// Check that motor D is in the correct range
 			if ((motorD <= 90) && (motorD >= -90))
 			{
-				byteD = (char)(motorD + 90);  // actual legit values for the motor range from
+				motorBytes[3] = (char)(motorD + 90);  // actual legit values for the motor range from
 				// 0 to 180, so shift by 90.
-				motorString += byteD;
+				//motorString += byteD;
 			}
 			else
 				return -1;
@@ -223,8 +223,8 @@ namespace Jerry_Sanders_2010
 			// Check that servo1 is in the correct range
 			if ((servo1 <= 180) && (servo1 >= 0))
 			{
-				byte1 = (char)servo1;
-				motorString += byte1;
+				motorBytes[4] = (char)servo1;
+				//motorString += byte1;
 			}
 			else
 				return -1;
@@ -232,8 +232,8 @@ namespace Jerry_Sanders_2010
 			// Check that servo2 is in the correct range
 			if ((servo2 <= 180) && (servo2 >= 0))
 			{
-				byte2 = (char)servo2;
-				motorString += byte2;
+				motorBytes[5] = (char)servo2;
+				//motorString += byte2;
 			}
 			else
 				return -1;
@@ -241,8 +241,8 @@ namespace Jerry_Sanders_2010
 			// Check that servo3 is in the correct range
 			if ((servo3 <= 180) && (servo3 >= 0))
 			{
-				byte3 = (char)servo3;
-				motorString += byte3;
+				motorBytes[6] = (char)servo3;
+				//motorString += byte3;
 			}
 			else
 				return -1;
@@ -252,11 +252,13 @@ namespace Jerry_Sanders_2010
 			if (((gripper == 0) || (gripper == 1)) && ((gripper == 0) || (gripper == 1)))
 			{
 				// Combine gripper and cutter into a single byte
-				byteGripCut = (char)(gripper + (cutter << 1));
-				motorString += byteGripCut;
+				motorBytes[7] = (char)(gripper + (cutter << 1));
+				//motorString += byteGripCut;
 			}
 			else
 				return -1;
+
+			motorString = new string(motorBytes);
 
 			//txtDebugSerialOut.ResetText();
 			//txtDebugSerialOut.AppendText(motorString);
@@ -278,6 +280,261 @@ namespace Jerry_Sanders_2010
 			return 0;
 
 
+
+		}
+
+		/* sendMotorParams
+		 * Sends speed data for only the driving motors
+		 *  Inputs: motorA  - speed of motor A. Ranges from -90 to +90
+		 *          motorB  - speed of motor B. Ranges from -90 to +90
+		 *          motorC  - speed of motor C. Ranges from -90 to +90
+		 *          motorD  - speed of motor D. Ranges from -90 to +90
+		 *  Outputs: none
+		 *  Return value: 0 means all is well
+		 *                -1 means an error occured (a parameter is out of bounds, most likely)
+		 *  Side Effects: sends data over the serial port
+		 */
+		private int sendMotorParams(int motorA, int motorB, int motorC,
+			int motorD)
+		{
+			// temporary motor variables (as single bytes)
+			//char byteA, byteB, byteC, byteD;
+			char[] motorBytes = new char[8];
+
+			// Buffer string to send over serial port
+			string motorString = "";
+
+			// Check that motor A is in the correct range
+			if ((motorA <= 90) && (motorA >= -90))
+			{
+				motorBytes[0] = (char)(motorA + 90);  // actual legit values for the motor range from
+				// 0 to 180, so shift by 90.
+
+				//motorString += byteA;
+			}
+			else
+				return -1;
+
+			// Check that motor B is in the correct range
+			if ((motorB <= 90) && (motorB >= -90))
+			{
+				motorBytes[1] = (char)(motorB + 90);  // actual legit values for the motor range from
+				// 0 to 180, so shift by 90.
+
+				//motorString += byteB;
+			}
+			else
+				return -1;
+
+			// Check that motor C is in the correct range
+			if ((motorC <= 90) && (motorC >= -90))
+			{
+				motorBytes[2] = (char)(motorC + 90);  // actual legit values for the motor range from
+				                              // 0 to 180, so shift by 90.
+				//motorString += byteC;
+			}
+			else
+				return -1;
+
+			// Check that motor D is in the correct range
+			if ((motorD <= 90) && (motorD >= -90))
+			{
+				motorBytes[3] = (char)(motorD + 90);  // actual legit values for the motor range from
+				                              // 0 to 180, so shift by 90.
+				//motorString += byteD;
+			}
+			else
+				return -1;
+
+			motorBytes[4] = (char)servo1CurrentPosition;
+			motorBytes[5] = (char)servo2CurrentPosition;
+			motorBytes[6] = (char)servo3CurrentPosition;
+			motorBytes[7] = (char)(GripperCurrentPosition + (CutterCurrentPosition << 1));
+
+
+			motorString = new string(motorBytes);
+
+			sendSerialData(motorString);
+
+			// Update global motor speed variables
+			motorACurrentSpeed = motorA;
+			motorBCurrentSpeed = motorB;
+			motorCCurrentSpeed = motorC;
+			motorDCurrentSpeed = motorD;
+
+			return 0;
+		}
+
+		/* sendServoParams
+		 * Sends speed and position data for all motors (including arm servos)
+		 *  Inputs: servo1  - position of servo 1. Ranges from 0 to 180
+		 *          servo2  - position of servo 2. Ranges from 0 to 180
+		 *          servo3  - position of servo 3. Ranges from 0 to 180
+		 *  Outputs: none
+		 *  Return value: 0 means all is well
+		 *                -1 means an error occured (a parameter is out of bounds, most likely)
+		 *  Side Effects: sends data over the serial port
+		 */
+		private int sendServoParams(int servo1, int servo2, int servo3)
+		{
+			// temporary motor variables (as single bytes)
+			char[] motorBytes = new char[8];
+
+			// Buffer string to send over serial port
+			string motorString = "";
+
+			// Check that servo1 is in the correct range
+			if ((servo1 <= 180) && (servo1 >= 0))
+			{
+				motorBytes[4] = (char)servo1;
+				//motorString += byte1;
+			}
+			else
+				return -1;
+
+			// Check that servo2 is in the correct range
+			if ((servo2 <= 180) && (servo2 >= 0))
+			{
+				motorBytes[5] = (char)servo2;
+				//motorString += byte2;
+			}
+			else
+				return -1;
+
+			// Check that servo3 is in the correct range
+			if ((servo3 <= 180) && (servo3 >= 0))
+			{
+				motorBytes[6] = (char)servo3;
+				//motorString += byte3;
+			}
+			else
+				return -1;
+
+			motorBytes[0] = (char)(motorACurrentSpeed + 90);
+			motorBytes[1] = (char)(motorBCurrentSpeed + 90);
+			motorBytes[2] = (char)(motorCCurrentSpeed + 90);
+			motorBytes[3] = (char)(motorDCurrentSpeed + 90);
+
+			motorBytes[7] = (char)(GripperCurrentPosition + (CutterCurrentPosition << 1));
+
+			motorString = new string(motorBytes);
+
+			sendSerialData(motorString);
+
+
+			// update global servo position variables
+			servo1CurrentPosition = servo1;
+			servo2CurrentPosition = servo2;
+			servo3CurrentPosition = servo3;
+
+			return 0;
+		}
+
+		private void openGripper()
+		{
+			// temporary motor variables (as single bytes)
+			char[] motorBytes = new char[8];
+
+			// Buffer string to send over serial port
+			string motorString = "";
+
+			motorBytes[0] = (char)(motorACurrentSpeed + 90);
+			motorBytes[1] = (char)(motorBCurrentSpeed + 90);
+			motorBytes[2] = (char)(motorCCurrentSpeed + 90);
+			motorBytes[3] = (char)(motorDCurrentSpeed + 90);
+
+			motorBytes[4] = (char)servo1CurrentPosition;
+			motorBytes[5] = (char)servo2CurrentPosition;
+			motorBytes[6] = (char)servo3CurrentPosition;
+
+			motorBytes[7] = (char)((CutterCurrentPosition << 1));
+
+			motorString = new string(motorBytes);
+
+			sendSerialData(motorString);
+
+			GripperCurrentPosition = 0;
+
+		}
+
+		private void closeGripper()
+		{
+			// temporary motor variables (as single bytes)
+			char[] motorBytes = new char[8];
+
+			// Buffer string to send over serial port
+			string motorString = "";
+
+			motorBytes[0] = (char)(motorACurrentSpeed + 90);
+			motorBytes[1] = (char)(motorBCurrentSpeed + 90);
+			motorBytes[2] = (char)(motorCCurrentSpeed + 90);
+			motorBytes[3] = (char)(motorDCurrentSpeed + 90);
+
+			motorBytes[4] = (char)servo1CurrentPosition;
+			motorBytes[5] = (char)servo2CurrentPosition;
+			motorBytes[6] = (char)servo3CurrentPosition;
+
+			motorBytes[7] = (char)((CutterCurrentPosition << 1) + 0x01);
+
+			motorString = new string(motorBytes);
+
+			sendSerialData(motorString);
+
+			GripperCurrentPosition = 1;
+
+		}
+
+		private void openCutter()
+		{
+			// temporary motor variables (as single bytes)
+			char[] motorBytes = new char[8];
+
+			// Buffer string to send over serial port
+			string motorString = "";
+
+			motorBytes[0] = (char)(motorACurrentSpeed + 90);
+			motorBytes[1] = (char)(motorBCurrentSpeed + 90);
+			motorBytes[2] = (char)(motorCCurrentSpeed + 90);
+			motorBytes[3] = (char)(motorDCurrentSpeed + 90);
+
+			motorBytes[4] = (char)servo1CurrentPosition;
+			motorBytes[5] = (char)servo2CurrentPosition;
+			motorBytes[6] = (char)servo3CurrentPosition;
+
+			motorBytes[7] = (char)(GripperCurrentPosition);
+
+			motorString = new string(motorBytes);
+
+			sendSerialData(motorString);
+
+			CutterCurrentPosition = 0;
+
+		}
+
+		private void closeCutter()
+		{
+			// temporary motor variables (as single bytes)
+			char[] motorBytes = new char[8];
+
+			// Buffer string to send over serial port
+			string motorString = "";
+
+			motorBytes[0] = (char)(motorACurrentSpeed + 90);
+			motorBytes[1] = (char)(motorBCurrentSpeed + 90);
+			motorBytes[2] = (char)(motorCCurrentSpeed + 90);
+			motorBytes[3] = (char)(motorDCurrentSpeed + 90);
+
+			motorBytes[4] = (char)servo1CurrentPosition;
+			motorBytes[5] = (char)servo2CurrentPosition;
+			motorBytes[6] = (char)servo3CurrentPosition;
+
+			motorBytes[7] = (char)(GripperCurrentPosition + 0x10);
+
+			motorString = new string(motorBytes);
+
+			sendSerialData(motorString);
+
+			CutterCurrentPosition = 1;
 
 		}
 
@@ -306,7 +563,7 @@ namespace Jerry_Sanders_2010
 			serialDisplay.ReadOnly = true;
 		}
 
-		private void btnSendMotorValues_Click(object sender, EventArgs e)
+		private void btnSendMotorAndServoValues_Click(object sender, EventArgs e)
 		{
 			int grip, cut;
 
@@ -321,12 +578,56 @@ namespace Jerry_Sanders_2010
 				cut = 0;
 
 
-			if (sendMotorParams(Convert.ToInt32(txtMotorA.Text), Convert.ToInt32(txtMotorB.Text),
+			if (sendMotorAndServoParams(Convert.ToInt32(txtMotorA.Text), Convert.ToInt32(txtMotorB.Text),
 				Convert.ToInt32(txtMotorC.Text), Convert.ToInt32(txtMotorD.Text),
 				Convert.ToInt32(txtServo1.Text), Convert.ToInt32(txtServo2.Text),
 				Convert.ToInt32(txtServo3.Text), grip, cut) == -1)
 			{
 				MessageBox.Show("Error with motor data.  Enter some more correct values.");
+			}
+		}
+
+		private void btnSendMotorValues_Click(object sender, EventArgs e)
+		{
+			if (sendMotorParams(Convert.ToInt32(txtMotorA.Text), Convert.ToInt32(txtMotorB.Text),
+				Convert.ToInt32(txtMotorC.Text), Convert.ToInt32(txtMotorD.Text)) == -1)
+			{
+				MessageBox.Show("Error with motor data.  Enter some more correct values.");
+			}
+		}
+
+		private void btnSendServoValues_Click(object sender, EventArgs e)
+		{
+			if (sendServoParams(Convert.ToInt32(txtServo1.Text), Convert.ToInt32(txtServo2.Text),
+				Convert.ToInt32(txtServo3.Text)) == -1)
+			{
+				MessageBox.Show("Error with servo data.  Enter some more correct values.");
+			}
+		}
+
+		private void btnOpenCloseGrip_Click(object sender, EventArgs e)
+		{
+			if (GripperCurrentPosition == 0)
+			{
+				closeGripper();
+				//btnOpenCloseGrip.Text = "Open Gripper";
+			}
+			else
+			{
+				openGripper();
+				//btnOpenCloseGrip.Text = "Close Gripper";
+			}
+		}
+
+		private void btnOpenCloseCutter_Click(object sender, EventArgs e)
+		{
+			if (CutterCurrentPosition == 0)
+			{
+				closeCutter();
+			}
+			else
+			{
+				openCutter();
 			}
 		}
 	}
