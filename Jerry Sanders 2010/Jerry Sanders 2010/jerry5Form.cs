@@ -1,4 +1,52 @@
-﻿using System;
+﻿/* Jerry 5 Control interface
+ * 
+ * This file contains code for an interface to the Jerry 5 robot.
+ * The Jerry 5 robot is an entrant in the 2010 Jerry Sanders Creative Design
+ * Competion <http://dc.ec.uiuc.edu>.
+ * 
+ * TODO:
+ *  - Add in Wiimote stuff
+ *  - Inverse Kinematics for the arm
+ *  - Logic between wiimote and serial interface
+ *  - Arduino code (not in this file)
+ *  - Everything!!!!
+ *  
+ */
+
+/* Diagrams:
+ * (these are mostly just to show which variables correspond to which motors).
+ * 
+ * Top down view of robot:
+ * 
+ *               Front
+ *       ______________________
+ *       |                    |
+ *       |== motorA  motorB ==|
+ *       |                    |
+ *       |                    |
+ *       |                    |
+ *       |                    |
+ *       |                    |
+ *       |== motorC  motorC ==|
+ *       |                    |
+ *       ______________________
+ *       
+ * 
+ * Crude drawing of Arm:
+ * 
+ *      gripper ==|\\
+ *       cutter ==||\\
+ *                   \\
+ *                    == servo3 (elbow joint)
+ *                    ||
+ *                    ||
+ *                    ||
+ *                    == servo2 (shoulder joint)
+ *                    == servo1 (rotates entire arm)
+ *                    
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,6 +54,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using WiimoteLib;
 
 namespace Jerry_Sanders_2010
 {
@@ -15,6 +64,19 @@ namespace Jerry_Sanders_2010
 		// Serial Port variables
 		string RxString;
 		string TxString;
+
+		// Motor variables
+		int motorACurrentSpeed = 0;
+		int motorBCurrentSpeed = 0;
+		int motorCCurrentSpeed = 0;
+		int motorDCurrentSpeed = 0;
+
+		// Servo variables
+		int servo1CurrentPosition = 0;
+		int servo2CurrentPosition = 0;
+		int servo3CurrentPosition = 0;
+		int GripperCurrentPosition = 0;
+		int CutterCurrentPosition = 0;
 
 
 		public jerry5Form()
@@ -82,10 +144,142 @@ namespace Jerry_Sanders_2010
 		private void sendSerialData(string TxData)
 		{
 			string TxBuffer = '\xFD' + TxData + '\xFF';
-			serialArduino.Write(TxBuffer);
+			txtDebugSerialOut.ResetText();
+			txtDebugSerialOut.AppendText(TxBuffer);
+			if (serialArduino.IsOpen)
+			{
+				serialArduino.Write(TxBuffer);
+			}
 		}
 
-		
+		/* sendMotorAndServoParams
+		 * Sends speed and position data for all motors (including arm servos)
+		 *  Inputs: motorA  - speed of motor A. Ranges from -90 to +90
+		 *          motorB  - speed of motor B. Ranges from -90 to +90
+		 *          motorC  - speed of motor C. Ranges from -90 to +90
+		 *          motorD  - speed of motor D. Ranges from -90 to +90
+		 *          servo1  - position of servo 1. Ranges from 0 to 180
+		 *          servo2  - position of servo 2. Ranges from 0 to 180
+		 *          servo3  - position of servo 3. Ranges from 0 to 180
+		 *          gripper - State of gripper. Open (0) or closed (1)
+		 *          cutter  - State of cutter. Open (0) or closed(1)
+		 *  Outputs: none
+		 *  Return value: 0 means all is well
+		 *                -1 means an error occured (a parameter is out of bounds, most likely)
+		 *  Side Effects: sends data over the serial port
+		 */
+		private int sendMotorAndServoParams(int motorA, int motorB, int motorC,
+			int motorD, int servo1, int servo2, int servo3,
+			int gripper, int cutter)
+		{
+			// temporary motor variables (as single bytes)
+			char byteA, byteB, byteC, byteD, byte1, byte2, byte3, byteGripCut;
+
+			// Buffer string to send over serial port
+			string motorString = "";
+
+			// Check that motor A is in the correct range
+			if ((motorA <= 90) && (motorA >= -90))
+			{
+				byteA = (char)(motorA + 90);  // actual legit values for the motor range from
+				                      // 0 to 180, so shift by 90.
+
+				motorString += byteA;
+			}
+			else
+				return -1;
+
+			// Check that motor B is in the correct range
+			if ((motorB <= 90) && (motorB >= -90))
+			{
+				byteB = (char)(motorB + 90);  // actual legit values for the motor range from
+				                      // 0 to 180, so shift by 90.
+
+				motorString += byteB;
+			}
+			else
+				return -1;
+
+			// Check that motor C is in the correct range
+			if ((motorC <= 90) && (motorC >= -90))
+			{
+				byteC = (char)(motorC + 90);  // actual legit values for the motor range from
+				                      // 0 to 180, so shift by 90.
+				motorString += byteC;
+			}
+			else
+				return -1;
+			
+			// Check that motor D is in the correct range
+			if ((motorD <= 90) && (motorD >= -90))
+			{
+				byteD = (char)(motorD + 90);  // actual legit values for the motor range from
+				// 0 to 180, so shift by 90.
+				motorString += byteD;
+			}
+			else
+				return -1;
+
+			// Check that servo1 is in the correct range
+			if ((servo1 <= 180) && (servo1 >= 0))
+			{
+				byte1 = (char)servo1;
+				motorString += byte1;
+			}
+			else
+				return -1;
+
+			// Check that servo2 is in the correct range
+			if ((servo2 <= 180) && (servo2 >= 0))
+			{
+				byte2 = (char)servo2;
+				motorString += byte2;
+			}
+			else
+				return -1;
+
+			// Check that servo3 is in the correct range
+			if ((servo3 <= 180) && (servo3 >= 0))
+			{
+				byte3 = (char)servo3;
+				motorString += byte3;
+			}
+			else
+				return -1;
+
+
+			// Check that gripper and cutter are in the correct range
+			if (((gripper == 0) || (gripper == 1)) && ((gripper == 0) || (gripper == 1)))
+			{
+				// Combine gripper and cutter into a single byte
+				byteGripCut = (char)(gripper + (cutter << 1));
+				motorString += byteGripCut;
+			}
+			else
+				return -1;
+
+			//txtDebugSerialOut.ResetText();
+			//txtDebugSerialOut.AppendText(motorString);
+			sendSerialData(motorString);
+			
+			// Update global motor speed variables
+			motorACurrentSpeed = motorA;
+			motorBCurrentSpeed = motorB;
+			motorCCurrentSpeed = motorC;
+			motorDCurrentSpeed = motorD;
+
+			// update global servo position variables
+			servo1CurrentPosition = servo1;
+			servo2CurrentPosition = servo2;
+			servo3CurrentPosition = servo3;
+			GripperCurrentPosition = gripper;
+			CutterCurrentPosition = cutter;
+
+			return 0;
+
+
+
+		}
 
 		private void btnStartSerial_Click(object sender, EventArgs e)
 		{
@@ -110,6 +304,30 @@ namespace Jerry_Sanders_2010
 			btnStartSerial.Enabled = true;
 			btnStopSerial.Enabled = false;
 			serialDisplay.ReadOnly = true;
+		}
+
+		private void btnSendMotorValues_Click(object sender, EventArgs e)
+		{
+			int grip, cut;
+
+			if (chkGripper.Checked)
+				grip = 1;
+			else
+				grip = 0;
+
+			if (chkCutter.Checked)
+				cut = 1;
+			else
+				cut = 0;
+
+
+			if (sendMotorParams(Convert.ToInt32(txtMotorA.Text), Convert.ToInt32(txtMotorB.Text),
+				Convert.ToInt32(txtMotorC.Text), Convert.ToInt32(txtMotorD.Text),
+				Convert.ToInt32(txtServo1.Text), Convert.ToInt32(txtServo2.Text),
+				Convert.ToInt32(txtServo3.Text), grip, cut) == -1)
+			{
+				MessageBox.Show("Error with motor data.  Enter some more correct values.");
+			}
 		}
 	}
 }
