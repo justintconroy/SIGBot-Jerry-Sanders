@@ -61,6 +61,8 @@ namespace Jerry_Sanders_2010
 	public partial class jerry5Form : Form
 	{
 
+		# region Local Variables
+
 		// Serial Port variables
 		string RxString;
 		string TxString;
@@ -78,7 +80,10 @@ namespace Jerry_Sanders_2010
 		int GripperCurrentPosition = 0;
 		int CutterCurrentPosition = 0;
 
+		Wiimote wm = new Wiimote();
 
+		# endregion
+		
 		public jerry5Form()
 		{
 			InitializeComponent();
@@ -89,7 +94,37 @@ namespace Jerry_Sanders_2010
 		 */
 		private void jerry5Form_Load(object sender, EventArgs e)
 		{
+			// connect it and set it up as always
+				wm.WiimoteChanged += wm_WiimoteChanged;
+				wm.WiimoteExtensionChanged += wm_WiimoteExtensionChanged;
+			// attempt to connect to a wiimote
+			try
+			{
+				wm.Connect();
+			}
+			catch (WiimoteNotFoundException ex)
+			{
+				MessageBox.Show(ex.Message, "Wiimote not found error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			catch (WiimoteException ex)
+			{
+				MessageBox.Show(ex.Message, "Wiimote error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Unknown error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
 
+			// set the report type for the wiimote
+			if (wm.WiimoteState.ExtensionType != ExtensionType.BalanceBoard)
+			{
+				wm.SetReportType(InputReport.ExtensionAccel, true);
+
+				wm.SetLEDs(1);
+			}
+
+			// set default motor positions/speeds
+			sendMotorAndServoParams(0, 0, 0, 0, 90, 90, 90, 0, 0);
 		}
 
 		/* jerry5Form_FormClosing
@@ -101,7 +136,9 @@ namespace Jerry_Sanders_2010
 			if (serialArduino.IsOpen)
 				serialArduino.Close();
 		}
-		
+
+		# region Serial Port stuff
+
 		/* serialArduino_DataRecieved
 		 * Event handler for processing data from the serial port as it is recieved.
 		 */
@@ -109,6 +146,7 @@ namespace Jerry_Sanders_2010
 		{
 			RxString += serialArduino.ReadExisting();
 			this.Invoke(new EventHandler(serialArduinoProcessRx));
+			//serialDisplay.AppendText("\n");
 		}
 
 		/* serialArduinoProcessRx
@@ -116,6 +154,8 @@ namespace Jerry_Sanders_2010
 		 */
 		private void serialArduinoProcessRx(object sender, EventArgs e)
 		{
+			serialDisplay.AppendText(RxString);
+			serialDisplay.AppendText("\n");
 		}
 
 		private void serialDisplay_KeyPress(object sender, KeyPressEventArgs e)
@@ -143,12 +183,16 @@ namespace Jerry_Sanders_2010
 		 */
 		private void sendSerialData(string TxData)
 		{
-			string TxBuffer = '\xFD' + TxData + '\xFF';
+			string TxBuffer = "";
+			TxBuffer += (char)0x7F;
+			TxBuffer += TxData;
+			TxBuffer += (char)0xFF;
 			txtDebugSerialOut.ResetText();
 			txtDebugSerialOut.AppendText(TxBuffer);
 			if (serialArduino.IsOpen)
 			{
 				serialArduino.Write(TxBuffer);
+				TxString = "";
 			}
 		}
 
@@ -630,5 +674,47 @@ namespace Jerry_Sanders_2010
 				openCutter();
 			}
 		}
+
+		private void btnResetSerialDisplay_Click(object sender, EventArgs e)
+		{
+			serialDisplay.ResetText();
+		}
+
+		#endregion
+
+		# region Wiimote stuff
+
+		void wm_WiimoteChanged(object sender, WiimoteChangedEventArgs e)
+		{
+			int joyXConverted = 0;
+			int joyYConverted = 0;
+			if (wm.WiimoteState.ExtensionType == ExtensionType.Nunchuk)
+			{
+				// TODO: add a mode for turning i.e. by holding down
+				//       a button to switch to this mode
+
+				// Get the joystick values from the nunchuck
+				joyXConverted = wm.WiimoteState.NunchukState.RawJoystick.X * 180 / 255 - 94;
+				joyYConverted = wm.WiimoteState.NunchukState.RawJoystick.Y * 180 / 255 - 91;
+
+				// See page 4 of Designing Omni-Directional Mobile Robot with Mecanum Wheel
+				// in the mecanum_wheel directory for more information on how the wheels should
+				// be actuated properly.
+				sendMotorParams(joyYConverted + joyXConverted, joyYConverted - joyXConverted,
+					joyYConverted - joyXConverted, joyYConverted + joyXConverted);
+
+			}
+		}
+
+		void wm_WiimoteExtensionChanged(object sender, WiimoteExtensionChangedEventArgs e)
+		{
+			if (e.Inserted)
+				((Wiimote)sender).SetReportType(InputReport.IRExtensionAccel, true);
+			else
+				((Wiimote)sender).SetReportType(InputReport.IRAccel, true);
+		}
+
+
+		#endregion
 	}
 }

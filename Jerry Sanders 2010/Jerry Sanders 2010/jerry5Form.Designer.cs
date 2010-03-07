@@ -56,11 +56,14 @@
 			this.btnSendServoValues = new System.Windows.Forms.Button();
 			this.btnOpenCloseGrip = new System.Windows.Forms.Button();
 			this.btnOpenCloseCutter = new System.Windows.Forms.Button();
+			this.btnResetSerialDisplay = new System.Windows.Forms.Button();
+			this.lblSerialOutputDebug = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// serialArduino
 			// 
-			this.serialArduino.PortName = "COM41";
+			this.serialArduino.PortName = "COM15";
+			this.serialArduino.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialArduino_DataReceived);
 			// 
 			// label1
 			// 
@@ -104,7 +107,7 @@
 			// 
 			// txtDebugSerialOut
 			// 
-			this.txtDebugSerialOut.Location = new System.Drawing.Point(12, 213);
+			this.txtDebugSerialOut.Location = new System.Drawing.Point(12, 256);
 			this.txtDebugSerialOut.Name = "txtDebugSerialOut";
 			this.txtDebugSerialOut.Size = new System.Drawing.Size(156, 20);
 			this.txtDebugSerialOut.TabIndex = 14;
@@ -298,11 +301,32 @@
 			this.btnOpenCloseCutter.UseVisualStyleBackColor = true;
 			this.btnOpenCloseCutter.Click += new System.EventHandler(this.btnOpenCloseCutter_Click);
 			// 
+			// btnResetSerialDisplay
+			// 
+			this.btnResetSerialDisplay.Location = new System.Drawing.Point(12, 209);
+			this.btnResetSerialDisplay.Name = "btnResetSerialDisplay";
+			this.btnResetSerialDisplay.Size = new System.Drawing.Size(75, 23);
+			this.btnResetSerialDisplay.TabIndex = 16;
+			this.btnResetSerialDisplay.Text = "Reset Serial Display";
+			this.btnResetSerialDisplay.UseVisualStyleBackColor = true;
+			this.btnResetSerialDisplay.Click += new System.EventHandler(this.btnResetSerialDisplay_Click);
+			// 
+			// lblSerialOutputDebug
+			// 
+			this.lblSerialOutputDebug.AutoSize = true;
+			this.lblSerialOutputDebug.Location = new System.Drawing.Point(12, 235);
+			this.lblSerialOutputDebug.Name = "lblSerialOutputDebug";
+			this.lblSerialOutputDebug.Size = new System.Drawing.Size(103, 13);
+			this.lblSerialOutputDebug.TabIndex = 17;
+			this.lblSerialOutputDebug.Text = "Serial Output Debug";
+			// 
 			// jerry5Form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(499, 356);
+			this.Controls.Add(this.lblSerialOutputDebug);
+			this.Controls.Add(this.btnResetSerialDisplay);
 			this.Controls.Add(this.btnOpenCloseCutter);
 			this.Controls.Add(this.btnOpenCloseGrip);
 			this.Controls.Add(this.btnSendServoValues);
@@ -367,6 +391,8 @@
 		private System.Windows.Forms.Button btnSendServoValues;
 		private System.Windows.Forms.Button btnOpenCloseGrip;
 		private System.Windows.Forms.Button btnOpenCloseCutter;
+		private System.Windows.Forms.Button btnResetSerialDisplay;
+		private System.Windows.Forms.Label lblSerialOutputDebug;
 	}
 }
 
