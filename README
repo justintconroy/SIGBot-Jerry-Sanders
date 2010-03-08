@@ -1,0 +1,9 @@
+C# code for communicating between the wiimote and a serial port (connected
+to the arduino) is located in the "Jerry Sanders 2010" directory.
+
+The "serial_servo2" directory contains code for testing the serial
+interface from the above C# code.  Currently, there is a bug with the
+bytes being sent over the serial interface.  It seems like the arduino
+turns 8-bit data bytes into 7-bit ASCII bytes, thus losing the most
+significant bit of the data.  I have no idea why this happens.  Looking at
+(what I think is) the source code for the serial port library

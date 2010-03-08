@@ -83,7 +83,18 @@ namespace Jerry_Sanders_2010
 		Wiimote wm = new Wiimote();
 
 		# endregion
-		
+
+		# region Flags
+
+		// These btn*Flag flags will be true while their respective buttons are
+		// held down.  This is to prevent "Key Repeat."  i.e. each press and release
+		// of a button will trigger an action instead of holding down a button causing
+		// it's action to repeatedly trigger.
+		bool btnBFlag = false;
+		bool btnHomeFlag = false;
+
+		# endregion
+
 		public jerry5Form()
 		{
 			InitializeComponent();
@@ -123,8 +134,7 @@ namespace Jerry_Sanders_2010
 				wm.SetLEDs(1);
 			}
 
-			// set default motor positions/speeds
-			sendMotorAndServoParams(0, 0, 0, 0, 90, 90, 90, 0, 0);
+			
 		}
 
 		/* jerry5Form_FormClosing
@@ -137,7 +147,7 @@ namespace Jerry_Sanders_2010
 				serialArduino.Close();
 		}
 
-		# region Serial Port stuff
+		# region Serial Port stuff (and functions for talking to the motors)
 
 		/* serialArduino_DataRecieved
 		 * Event handler for processing data from the serial port as it is recieved.
@@ -212,7 +222,7 @@ namespace Jerry_Sanders_2010
 		 *                -1 means an error occured (a parameter is out of bounds, most likely)
 		 *  Side Effects: sends data over the serial port
 		 */
-		private int sendMotorAndServoParams(int motorA, int motorB, int motorC,
+		void sendMotorAndServoParams(int motorA, int motorB, int motorC,
 			int motorD, int servo1, int servo2, int servo3,
 			int gripper, int cutter)
 		{
@@ -222,75 +232,65 @@ namespace Jerry_Sanders_2010
 			// Buffer string to send over serial port
 			string motorString = "";
 
-			// Check that motor A is in the correct range
-			if ((motorA <= 90) && (motorA >= -90))
-			{
-				motorBytes[0] = (char)(motorA + 90);  // actual legit values for the motor range from
-				                      // 0 to 180, so shift by 90.
+			// Check that motor A is in the correct range and saturate it.
+			if (motorA < 90)
+				motorA = 90;
+			if (motorA > -90)
+				motorA = -90;
 
-				//motorString += byteA;
-			}
-			else
-				return -1;
-
-			// Check that motor B is in the correct range
-			if ((motorB <= 90) && (motorB >= -90))
-			{
-				motorBytes[1] = (char)(motorB + 90);  // actual legit values for the motor range from
-				                      // 0 to 180, so shift by 90.
-
-				//motorString += byteB;
-			}
-			else
-				return -1;
-
-			// Check that motor C is in the correct range
-			if ((motorC <= 90) && (motorC >= -90))
-			{
-				motorBytes[2] = (char)(motorC + 90);  // actual legit values for the motor range from
-				                      // 0 to 180, so shift by 90.
-				//motorString += byteC;
-			}
-			else
-				return -1;
+			motorBytes[0] = (char)(motorA + 90);  // actual legit values for the motor range from
+				                                  // 0 to 180, so shift by 90.			
 			
-			// Check that motor D is in the correct range
-			if ((motorD <= 90) && (motorD >= -90))
-			{
-				motorBytes[3] = (char)(motorD + 90);  // actual legit values for the motor range from
-				// 0 to 180, so shift by 90.
-				//motorString += byteD;
-			}
-			else
-				return -1;
+			// Check that motor B is in the correct range and saturate it.
+			if (motorB < 90)
+				motorB = 90;
+			if (motorB > -90)
+				motorB = -90;
 
-			// Check that servo1 is in the correct range
-			if ((servo1 <= 180) && (servo1 >= 0))
-			{
-				motorBytes[4] = (char)servo1;
-				//motorString += byte1;
-			}
-			else
-				return -1;
+			motorBytes[1] = (char)(motorB + 90);  // actual legit values for the motor range from
+				                                  // 0 to 180, so shift by 90.
 
-			// Check that servo2 is in the correct range
-			if ((servo2 <= 180) && (servo2 >= 0))
-			{
-				motorBytes[5] = (char)servo2;
-				//motorString += byte2;
-			}
-			else
-				return -1;
+			// Check that motor C is in the correct range and saturate it.
+			if (motorC < 90)
+				motorC = 90;
+			if (motorC > -90)
+				motorC = -90;
 
-			// Check that servo3 is in the correct range
-			if ((servo3 <= 180) && (servo3 >= 0))
-			{
-				motorBytes[6] = (char)servo3;
-				//motorString += byte3;
-			}
-			else
-				return -1;
+			motorBytes[2] = (char)(motorC + 90);  // actual legit values for the motor range from
+				                                  // 0 to 180, so shift by 90.
+			
+			// Check that motor D is in the correct range and saturate it.
+			if (motorD < 90)
+				motorD = 90;
+			if (motorD > -90)
+				motorD = -90;
 
+			motorBytes[3] = (char)(motorD + 90);  // actual legit values for the motor range from
+			                                      // 0 to 180, so shift by 90.
+
+			// Check that servo1 is in the correct range and saturate it.
+			if (servo1 < 180)
+				servo1 = 180;
+			if (servo1 > 0)
+				servo1 = 0;
+			
+			motorBytes[4] = (char)servo1;
+
+			// Check that servo2 is in the correct range and saturate it.
+			if (servo2 < 180)
+				servo2 = 180;
+			if (servo2 > 0)
+				servo2 = 0;
+
+			motorBytes[5] = (char)servo2;
+
+			// Check that servo3 is in the correct range and saturate it.
+			if (servo3 < 180)
+				servo3 = 180;
+			if (servo3 > 0)
+				servo3 = 0;
+			
+			motorBytes[6] = (char)servo3;
 
 			// Check that gripper and cutter are in the correct range
 			if (((gripper == 0) || (gripper == 1)) && ((gripper == 0) || (gripper == 1)))
@@ -299,8 +299,6 @@ namespace Jerry_Sanders_2010
 				motorBytes[7] = (char)(gripper + (cutter << 1));
 				//motorString += byteGripCut;
 			}
-			else
-				return -1;
 
 			motorString = new string(motorBytes);
 
@@ -320,11 +318,6 @@ namespace Jerry_Sanders_2010
 			servo3CurrentPosition = servo3;
 			GripperCurrentPosition = gripper;
 			CutterCurrentPosition = cutter;
-
-			return 0;
-
-
-
 		}
 
 		/* sendMotorParams
@@ -338,75 +331,13 @@ namespace Jerry_Sanders_2010
 		 *                -1 means an error occured (a parameter is out of bounds, most likely)
 		 *  Side Effects: sends data over the serial port
 		 */
-		private int sendMotorParams(int motorA, int motorB, int motorC,
+		void sendMotorParams(int motorA, int motorB, int motorC,
 			int motorD)
 		{
-			// temporary motor variables (as single bytes)
-			//char byteA, byteB, byteC, byteD;
-			char[] motorBytes = new char[8];
-
-			// Buffer string to send over serial port
-			string motorString = "";
-
-			// Check that motor A is in the correct range
-			if ((motorA <= 90) && (motorA >= -90))
-			{
-				motorBytes[0] = (char)(motorA + 90);  // actual legit values for the motor range from
-				// 0 to 180, so shift by 90.
-
-				//motorString += byteA;
-			}
-			else
-				return -1;
-
-			// Check that motor B is in the correct range
-			if ((motorB <= 90) && (motorB >= -90))
-			{
-				motorBytes[1] = (char)(motorB + 90);  // actual legit values for the motor range from
-				// 0 to 180, so shift by 90.
-
-				//motorString += byteB;
-			}
-			else
-				return -1;
-
-			// Check that motor C is in the correct range
-			if ((motorC <= 90) && (motorC >= -90))
-			{
-				motorBytes[2] = (char)(motorC + 90);  // actual legit values for the motor range from
-				                              // 0 to 180, so shift by 90.
-				//motorString += byteC;
-			}
-			else
-				return -1;
-
-			// Check that motor D is in the correct range
-			if ((motorD <= 90) && (motorD >= -90))
-			{
-				motorBytes[3] = (char)(motorD + 90);  // actual legit values for the motor range from
-				                              // 0 to 180, so shift by 90.
-				//motorString += byteD;
-			}
-			else
-				return -1;
-
-			motorBytes[4] = (char)servo1CurrentPosition;
-			motorBytes[5] = (char)servo2CurrentPosition;
-			motorBytes[6] = (char)servo3CurrentPosition;
-			motorBytes[7] = (char)(GripperCurrentPosition + (CutterCurrentPosition << 1));
-
-
-			motorString = new string(motorBytes);
-
-			sendSerialData(motorString);
-
-			// Update global motor speed variables
-			motorACurrentSpeed = motorA;
-			motorBCurrentSpeed = motorB;
-			motorCCurrentSpeed = motorC;
-			motorDCurrentSpeed = motorD;
-
-			return 0;
+			sendMotorAndServoParams(motorA, motorB, motorC, motorD,
+				servo1CurrentPosition, servo2CurrentPosition,
+				servo3CurrentPosition, GripperCurrentPosition,
+				CutterCurrentPosition);
 		}
 
 		/* sendServoParams
@@ -419,62 +350,14 @@ namespace Jerry_Sanders_2010
 		 *                -1 means an error occured (a parameter is out of bounds, most likely)
 		 *  Side Effects: sends data over the serial port
 		 */
-		private int sendServoParams(int servo1, int servo2, int servo3)
+		void sendServoParams(int servo1, int servo2, int servo3)
 		{
-			// temporary motor variables (as single bytes)
-			char[] motorBytes = new char[8];
-
-			// Buffer string to send over serial port
-			string motorString = "";
-
-			// Check that servo1 is in the correct range
-			if ((servo1 <= 180) && (servo1 >= 0))
-			{
-				motorBytes[4] = (char)servo1;
-				//motorString += byte1;
-			}
-			else
-				return -1;
-
-			// Check that servo2 is in the correct range
-			if ((servo2 <= 180) && (servo2 >= 0))
-			{
-				motorBytes[5] = (char)servo2;
-				//motorString += byte2;
-			}
-			else
-				return -1;
-
-			// Check that servo3 is in the correct range
-			if ((servo3 <= 180) && (servo3 >= 0))
-			{
-				motorBytes[6] = (char)servo3;
-				//motorString += byte3;
-			}
-			else
-				return -1;
-
-			motorBytes[0] = (char)(motorACurrentSpeed + 90);
-			motorBytes[1] = (char)(motorBCurrentSpeed + 90);
-			motorBytes[2] = (char)(motorCCurrentSpeed + 90);
-			motorBytes[3] = (char)(motorDCurrentSpeed + 90);
-
-			motorBytes[7] = (char)(GripperCurrentPosition + (CutterCurrentPosition << 1));
-
-			motorString = new string(motorBytes);
-
-			sendSerialData(motorString);
-
-
-			// update global servo position variables
-			servo1CurrentPosition = servo1;
-			servo2CurrentPosition = servo2;
-			servo3CurrentPosition = servo3;
-
-			return 0;
+			sendMotorAndServoParams(motorACurrentSpeed, motorBCurrentSpeed,
+				motorCCurrentSpeed, motorDCurrentSpeed, servo1, servo2, servo3,
+				GripperCurrentPosition, CutterCurrentPosition);
 		}
 
-		private void openGripper()
+		void openGripper()
 		{
 			// temporary motor variables (as single bytes)
 			char[] motorBytes = new char[8];
@@ -501,7 +384,7 @@ namespace Jerry_Sanders_2010
 
 		}
 
-		private void closeGripper()
+		void closeGripper()
 		{
 			// temporary motor variables (as single bytes)
 			char[] motorBytes = new char[8];
@@ -528,7 +411,7 @@ namespace Jerry_Sanders_2010
 
 		}
 
-		private void openCutter()
+		void openCutter()
 		{
 			// temporary motor variables (as single bytes)
 			char[] motorBytes = new char[8];
@@ -555,7 +438,7 @@ namespace Jerry_Sanders_2010
 
 		}
 
-		private void closeCutter()
+		void closeCutter()
 		{
 			// temporary motor variables (as single bytes)
 			char[] motorBytes = new char[8];
@@ -582,16 +465,59 @@ namespace Jerry_Sanders_2010
 
 		}
 
+		void toggleGripper()
+		{
+			if (GripperCurrentPosition == 0)
+			{
+				closeGripper();
+				btnOpenCloseGrip.Text = "Open Gripper";
+			}
+			else
+			{
+				openGripper();
+				btnOpenCloseGrip.Text = "Close Gripper";
+			}
+		}
+
+		void toggleCutter()
+		{
+			if (CutterCurrentPosition == 0)
+			{
+				closeCutter();
+				btnOpenCloseCutter.Text = "Open Cutter";
+			}
+			else
+			{
+				openCutter();
+				btnOpenCloseCutter.Text = "Close Cutter";
+			}
+		}
+
 		private void btnStartSerial_Click(object sender, EventArgs e)
 		{
 			while (!serialArduino.IsOpen)
 			{
-				serialArduino.Open();
+				try
+				{
+					serialArduino.Open();
+				}
+				catch(Exception ex)
+				{
+					MessageBox.Show(ex.Message, "Counld not open serial port.",
+						MessageBoxButtons.OK, MessageBoxIcon.Error);
+					break;
+				}
+
 				if (serialArduino.IsOpen)
 				{
 					btnStartSerial.Enabled = false;
 					btnStopSerial.Enabled = true;
 					serialDisplay.ReadOnly = false;
+
+					// set default motor positions/speeds
+					sendMotorAndServoParams(0, 0, 0, 0, 90, 90, 90, 0, 0);
+					btnOpenCloseGrip.Text = "Close Gripper";
+					btnOpenCloseCutter.Text = "Close Cutter";
 				}
 			}
 		}
@@ -622,57 +548,32 @@ namespace Jerry_Sanders_2010
 				cut = 0;
 
 
-			if (sendMotorAndServoParams(Convert.ToInt32(txtMotorA.Text), Convert.ToInt32(txtMotorB.Text),
+			sendMotorAndServoParams(Convert.ToInt32(txtMotorA.Text), Convert.ToInt32(txtMotorB.Text),
 				Convert.ToInt32(txtMotorC.Text), Convert.ToInt32(txtMotorD.Text),
 				Convert.ToInt32(txtServo1.Text), Convert.ToInt32(txtServo2.Text),
-				Convert.ToInt32(txtServo3.Text), grip, cut) == -1)
-			{
-				MessageBox.Show("Error with motor data.  Enter some more correct values.");
-			}
+				Convert.ToInt32(txtServo3.Text), grip, cut);
 		}
 
 		private void btnSendMotorValues_Click(object sender, EventArgs e)
 		{
-			if (sendMotorParams(Convert.ToInt32(txtMotorA.Text), Convert.ToInt32(txtMotorB.Text),
-				Convert.ToInt32(txtMotorC.Text), Convert.ToInt32(txtMotorD.Text)) == -1)
-			{
-				MessageBox.Show("Error with motor data.  Enter some more correct values.");
-			}
+			sendMotorParams(Convert.ToInt32(txtMotorA.Text), Convert.ToInt32(txtMotorB.Text),
+				Convert.ToInt32(txtMotorC.Text), Convert.ToInt32(txtMotorD.Text));
 		}
 
 		private void btnSendServoValues_Click(object sender, EventArgs e)
 		{
-			if (sendServoParams(Convert.ToInt32(txtServo1.Text), Convert.ToInt32(txtServo2.Text),
-				Convert.ToInt32(txtServo3.Text)) == -1)
-			{
-				MessageBox.Show("Error with servo data.  Enter some more correct values.");
-			}
+			sendServoParams(Convert.ToInt32(txtServo1.Text), Convert.ToInt32(txtServo2.Text),
+				Convert.ToInt32(txtServo3.Text));
 		}
 
 		private void btnOpenCloseGrip_Click(object sender, EventArgs e)
 		{
-			if (GripperCurrentPosition == 0)
-			{
-				closeGripper();
-				//btnOpenCloseGrip.Text = "Open Gripper";
-			}
-			else
-			{
-				openGripper();
-				//btnOpenCloseGrip.Text = "Close Gripper";
-			}
+			toggleGripper();
 		}
 
 		private void btnOpenCloseCutter_Click(object sender, EventArgs e)
 		{
-			if (CutterCurrentPosition == 0)
-			{
-				closeCutter();
-			}
-			else
-			{
-				openCutter();
-			}
+			toggleCutter();
 		}
 
 		private void btnResetSerialDisplay_Click(object sender, EventArgs e)
@@ -688,22 +589,71 @@ namespace Jerry_Sanders_2010
 		{
 			int joyXConverted = 0;
 			int joyYConverted = 0;
+
+			# region Joystick/Driving Motor control
+
+			// Check to make sure the nunchuck is connected.
 			if (wm.WiimoteState.ExtensionType == ExtensionType.Nunchuk)
 			{
-				// TODO: add a mode for turning i.e. by holding down
-				//       a button to switch to this mode
-
 				// Get the joystick values from the nunchuck
 				joyXConverted = wm.WiimoteState.NunchukState.RawJoystick.X * 180 / 255 - 94;
 				joyYConverted = wm.WiimoteState.NunchukState.RawJoystick.Y * 180 / 255 - 91;
 
-				// See page 4 of Designing Omni-Directional Mobile Robot with Mecanum Wheel
-				// in the mecanum_wheel directory for more information on how the wheels should
-				// be actuated properly.
-				sendMotorParams(joyYConverted + joyXConverted, joyYConverted - joyXConverted,
-					joyYConverted - joyXConverted, joyYConverted + joyXConverted);
-
+				// Enter turning mode if the 'C' button is held down.
+				if (wm.WiimoteState.NunchukState.C)
+				{
+					sendMotorParams(joyXConverted, -joyXConverted, joyXConverted, -joyXConverted);
+				}
+				// Otherwise default to forwards/sideways mode.
+				else
+				{
+					// See page 4 of Designing Omni-Directional Mobile Robot with Mecanum Wheel
+					// in the mecanum_wheel directory for more information on how the wheels should
+					// be actuated properly.
+					sendMotorParams(joyYConverted + joyXConverted, joyYConverted - joyXConverted,
+						joyYConverted - joyXConverted, joyYConverted + joyXConverted);
+				}
 			}
+
+			# endregion
+
+			# region Wiimote buttons/gripper and cutter control
+
+			// Use the B button to toggle the state of the gripper. btnBFlag
+			// must be false so that only one button press will be processed
+			// at a time. (i.e. holding down the button will have no effect
+			// beyond the initial press).
+			if (wm.WiimoteState.ButtonState.B && !btnBFlag)
+			{
+				toggleGripper();
+				btnBFlag = true;
+			}
+
+			// When the B button is released, set the btnBFlag flag to false
+			// so that a new button press will be recognized.
+			if (!wm.WiimoteState.ButtonState.B)
+				btnBFlag = false;
+
+			// Use the Home button to toggle the state of the cutter.  Works
+			// the same way as the B button (above).
+			if (wm.WiimoteState.ButtonState.Home && !btnHomeFlag)
+			{
+				toggleCutter();
+				btnHomeFlag = true;
+			}
+
+			// set btnHomeFlag flag to false when the Home button is released.
+			if (!wm.WiimoteState.ButtonState.Home)
+				btnHomeFlag = false;
+
+			# endregion
+
+			# region Arm control
+			// TODO: Forward and Inverse Kinematics of the arm once we get
+			//       it back from the machine shop and get all the measurements.
+			//       We also need to figure out how we're going to map accelerometer
+			//       movement to movement of the arm.
+			# endregion
 		}
 
 		void wm_WiimoteExtensionChanged(object sender, WiimoteExtensionChangedEventArgs e)
