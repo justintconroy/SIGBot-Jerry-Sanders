@@ -604,7 +604,7 @@ namespace Jerry_Sanders_2010
 				{
 					sendMotorParams(joyXConverted, -joyXConverted, joyXConverted, -joyXConverted);
 				}
-				// Otherwise default to forwards/sideways mode.
+				// Otherwise default to translating mode.
 				else
 				{
 					// See page 4 of Designing Omni-Directional Mobile Robot with Mecanum Wheel

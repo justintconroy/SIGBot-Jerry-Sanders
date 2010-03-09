@@ -64,6 +64,7 @@
 			// 
 			this.serialArduino.PortName = "COM15";
 			this.serialArduino.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialArduino_DataReceived);
+			this.serialArduino.Encoding = System.Text.Encoding.UTF8;
 			// 
 			// label1
 			// 
