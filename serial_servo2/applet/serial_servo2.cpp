@@ -60,20 +60,19 @@ void readSerialString () {
     // Do while we don't have a line feed or carriage return
     while (Serial.available() > 0)
     {
-      Serial.print(Serial.read());
-      //sb = Serial.read();    
+      sb = Serial.read();    
       delay(1);
-      
+         
       //Serial.print(sb);
-      Serial.println(" recieved.");
-             
-      if (sb == 63)  // start byte
+      //Serial.println(" recieved.");
+       
+      if (sb == 253)  // start byte
       {
         //Serial.print("Recieved start byte.\n");
         //serInIndx = 0;
         readFlag = 1;
       }
-      else if (sb == 13)
+      else if (sb == 255)
       {
         //Serial.print("Recieved stop byte.\n");
         readFlag = 0;
@@ -115,7 +114,7 @@ void printSerialString() {
   
       Serial.println();
       Serial.print("Value to pan servo: ");
-      Serial.print(pval, DEC);
+      Serial.println(pval, DEC);
       
       panServo.write(pval);
       //analogWrite(servoPanPin,pval);
@@ -132,7 +131,7 @@ void printSerialString() {
   
       Serial.println();
       Serial.print("Value to tilt servo: ");
-      Serial.print(tval, DEC);
+      Serial.println(tval, DEC);
       
       tiltServo.write(tval);
       //analogWrite(10, tval);

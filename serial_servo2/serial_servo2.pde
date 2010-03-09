@@ -56,18 +56,18 @@ void readSerialString () {
     while (Serial.available() > 0)
     {
       sb = Serial.read();    
-      delay(100);
+      delay(1);
          
-      Serial.print(sb);
-      Serial.println(" recieved.");
+      //Serial.print(sb);
+      //Serial.println(" recieved.");
        
-      if (sb == 63)  // start byte
+      if (sb == 253)  // start byte
       {
         //Serial.print("Recieved start byte.\n");
         //serInIndx = 0;
         readFlag = 1;
       }
-      else if (sb == 13)
+      else if (sb == 255)
       {
         //Serial.print("Recieved stop byte.\n");
         readFlag = 0;

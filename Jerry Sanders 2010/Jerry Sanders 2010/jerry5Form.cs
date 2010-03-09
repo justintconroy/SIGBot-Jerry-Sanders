@@ -193,15 +193,18 @@ namespace Jerry_Sanders_2010
 		 */
 		private void sendSerialData(string TxData)
 		{
-			string TxBuffer = "";
-			TxBuffer += (char)0x7F;
-			TxBuffer += TxData;
-			TxBuffer += (char)0xFF;
+			byte [] TxBuffer = new byte[TxData.Length + 2];
+			TxBuffer[0] = 0xFD;
+			for (int i = 1; i < TxData.Length; i++)
+			{
+				TxBuffer[i] = (byte)TxData[i - 1];
+			}
+			TxBuffer[TxData.Length + 1] = 0xFF;
 			txtDebugSerialOut.ResetText();
-			txtDebugSerialOut.AppendText(TxBuffer);
+			txtDebugSerialOut.AppendText(TxData);
 			if (serialArduino.IsOpen)
 			{
-				serialArduino.Write(TxBuffer);
+				serialArduino.Write(TxBuffer,0,TxData.Length + 2);
 				TxString = "";
 			}
 		}
@@ -515,7 +518,7 @@ namespace Jerry_Sanders_2010
 					serialDisplay.ReadOnly = false;
 
 					// set default motor positions/speeds
-					sendMotorAndServoParams(0, 0, 0, 0, 90, 90, 90, 0, 0);
+					//sendMotorAndServoParams(0, 0, 0, 0, 90, 90, 90, 0, 0);
 					btnOpenCloseGrip.Text = "Close Gripper";
 					btnOpenCloseCutter.Text = "Close Cutter";
 				}
