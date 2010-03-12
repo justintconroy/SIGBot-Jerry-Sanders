@@ -236,61 +236,61 @@ namespace Jerry_Sanders_2010
 			string motorString = "";
 
 			// Check that motor A is in the correct range and saturate it.
-			if (motorA < 90)
+			if (motorA > 90)
 				motorA = 90;
-			if (motorA > -90)
+			if (motorA < -90)
 				motorA = -90;
 
 			motorBytes[0] = (char)(motorA + 90);  // actual legit values for the motor range from
 				                                  // 0 to 180, so shift by 90.			
 			
 			// Check that motor B is in the correct range and saturate it.
-			if (motorB < 90)
+			if (motorB > 90)
 				motorB = 90;
-			if (motorB > -90)
+			if (motorB < -90)
 				motorB = -90;
 
 			motorBytes[1] = (char)(motorB + 90);  // actual legit values for the motor range from
 				                                  // 0 to 180, so shift by 90.
 
 			// Check that motor C is in the correct range and saturate it.
-			if (motorC < 90)
+			if (motorC > 90)
 				motorC = 90;
-			if (motorC > -90)
+			if (motorC < -90)
 				motorC = -90;
 
 			motorBytes[2] = (char)(motorC + 90);  // actual legit values for the motor range from
 				                                  // 0 to 180, so shift by 90.
 			
 			// Check that motor D is in the correct range and saturate it.
-			if (motorD < 90)
+			if (motorD > 90)
 				motorD = 90;
-			if (motorD > -90)
+			if (motorD < -90)
 				motorD = -90;
 
 			motorBytes[3] = (char)(motorD + 90);  // actual legit values for the motor range from
 			                                      // 0 to 180, so shift by 90.
 
 			// Check that servo1 is in the correct range and saturate it.
-			if (servo1 < 180)
+			if (servo1 > 180)
 				servo1 = 180;
-			if (servo1 > 0)
+			if (servo1 < 0)
 				servo1 = 0;
 			
 			motorBytes[4] = (char)servo1;
 
 			// Check that servo2 is in the correct range and saturate it.
-			if (servo2 < 180)
+			if (servo2 > 180)
 				servo2 = 180;
-			if (servo2 > 0)
+			if (servo2 < 0)
 				servo2 = 0;
 
 			motorBytes[5] = (char)servo2;
 
 			// Check that servo3 is in the correct range and saturate it.
-			if (servo3 < 180)
+			if (servo3 > 180)
 				servo3 = 180;
-			if (servo3 > 0)
+			if (servo3 < 0)
 				servo3 = 0;
 			
 			motorBytes[6] = (char)servo3;

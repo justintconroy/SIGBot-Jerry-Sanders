@@ -62,7 +62,7 @@
 			// 
 			// serialArduino
 			// 
-			this.serialArduino.PortName = "COM17";
+			this.serialArduino.PortName = "COM41";
 			this.serialArduino.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialArduino_DataReceived);
 			//this.serialArduino.Encoding = System.Text.Encoding.UTF8;
 			// 
