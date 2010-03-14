@@ -58,14 +58,20 @@ using WiimoteLib;
 
 namespace Jerry_Sanders_2010
 {
+	# region Delegates for cross-thread communication
+	public delegate void DelegateDebugText(string s);
+	# endregion
+
 	public partial class jerry5Form : Form
 	{
+
+		public DelegateDebugText m_DelegateDebugText;
 
 		# region Local Variables
 
 		// Serial Port variables
 		string RxString;
-		string TxString;
+		string TxString = "";
 
 		// Motor variables
 		int motorACurrentSpeed = 0;
@@ -80,7 +86,18 @@ namespace Jerry_Sanders_2010
 		int GripperCurrentPosition = 0;
 		int CutterCurrentPosition = 0;
 
+		int timeElapsed = 0;
+
+		string motorString = "";
+
 		Wiimote wm = new Wiimote();
+
+		# region joystick vars
+
+		int JoyXOld = 0;
+		int JoyYOld = 0;
+
+		# endregion
 
 		# endregion
 
@@ -98,6 +115,8 @@ namespace Jerry_Sanders_2010
 		public jerry5Form()
 		{
 			InitializeComponent();
+			m_DelegateDebugText = new DelegateDebugText(this.DebugText);
+			//sendSerialData("");
 		}
 
 		/* jerry5Form_Load
@@ -134,6 +153,7 @@ namespace Jerry_Sanders_2010
 				wm.SetLEDs(1);
 			}
 
+			sendMotorAndServoParams(0, 0, 0, 0, 90, 74, 80, 0, 0);
 			
 		}
 
@@ -193,19 +213,22 @@ namespace Jerry_Sanders_2010
 		 */
 		private void sendSerialData(string TxData)
 		{
-			byte [] TxBuffer = new byte[TxData.Length + 2];
-			TxBuffer[0] = 0xFD;
-			for (int i = 1; i < TxData.Length; i++)
+			//if (TxData)
 			{
-				TxBuffer[i] = (byte)TxData[i - 1];
-			}
-			TxBuffer[TxData.Length + 1] = 0xFF;
-			txtDebugSerialOut.ResetText();
-			txtDebugSerialOut.AppendText(TxData);
-			if (serialArduino.IsOpen)
-			{
-				serialArduino.Write(TxBuffer,0,TxData.Length + 2);
-				TxString = "";
+				byte[] TxBuffer = new byte[TxData.Length + 2];
+				TxBuffer[0] = 0xFD;
+				for (int i = 1; i < TxData.Length; i++)
+				{
+					TxBuffer[i] = (byte)TxData[i - 1];
+				}
+				TxBuffer[TxData.Length + 1] = 0xFF;
+				this.Invoke(this.m_DelegateDebugText, new object[] { TxData });
+				if (serialArduino.IsOpen)
+				{
+					serialArduino.Write(TxBuffer, 0, TxBuffer.Length);
+					//serialArduino.Write(TxData);
+					TxString = "";
+				}
 			}
 		}
 
@@ -233,7 +256,7 @@ namespace Jerry_Sanders_2010
 			char[] motorBytes = new char[8];
 			
 			// Buffer string to send over serial port
-			string motorString = "";
+			motorString = "";
 
 			// Check that motor A is in the correct range and saturate it.
 			if (motorA > 90)
@@ -307,7 +330,7 @@ namespace Jerry_Sanders_2010
 
 			//txtDebugSerialOut.ResetText();
 			//txtDebugSerialOut.AppendText(motorString);
-			sendSerialData(motorString);
+			//sendSerialData(motorString);
 			
 			// Update global motor speed variables
 			motorACurrentSpeed = motorA;
@@ -473,12 +496,12 @@ namespace Jerry_Sanders_2010
 			if (GripperCurrentPosition == 0)
 			{
 				closeGripper();
-				btnOpenCloseGrip.Text = "Open Gripper";
+				//btnOpenCloseGrip.Text = "Open Gripper";
 			}
 			else
 			{
 				openGripper();
-				btnOpenCloseGrip.Text = "Close Gripper";
+				//btnOpenCloseGrip.Text = "Close Gripper";
 			}
 		}
 
@@ -487,12 +510,12 @@ namespace Jerry_Sanders_2010
 			if (CutterCurrentPosition == 0)
 			{
 				closeCutter();
-				btnOpenCloseCutter.Text = "Open Cutter";
+				//btnOpenCloseCutter.Text = "Open Cutter";
 			}
 			else
 			{
 				openCutter();
-				btnOpenCloseCutter.Text = "Close Cutter";
+				//btnOpenCloseCutter.Text = "Close Cutter";
 			}
 		}
 
@@ -518,7 +541,7 @@ namespace Jerry_Sanders_2010
 					serialDisplay.ReadOnly = false;
 
 					// set default motor positions/speeds
-					//sendMotorAndServoParams(0, 0, 0, 0, 90, 90, 90, 0, 0);
+					sendMotorAndServoParams(0, 0, 0, 0, 90, 90, 90, 0, 0);
 					btnOpenCloseGrip.Text = "Close Gripper";
 					btnOpenCloseCutter.Text = "Close Cutter";
 				}
@@ -598,28 +621,41 @@ namespace Jerry_Sanders_2010
 			// Check to make sure the nunchuck is connected.
 			if (wm.WiimoteState.ExtensionType == ExtensionType.Nunchuk)
 			{
-				// Get the joystick values from the nunchuck
-				joyXConverted = wm.WiimoteState.NunchukState.RawJoystick.X * 180 / 255 - 94;
-				joyYConverted = wm.WiimoteState.NunchukState.RawJoystick.Y * 180 / 255 - 91;
+				//if (timeElapsed % 10 == 0)
+				{
+					// Get the joystick values from the nunchuck
+					joyXConverted = ((wm.WiimoteState.NunchukState.RawJoystick.X * 180/255) - 94)/4;
+					joyYConverted = ((wm.WiimoteState.NunchukState.RawJoystick.Y * 180/255) - 91)/4;
 
-				// Enter turning mode if the 'C' button is held down.
-				if (wm.WiimoteState.NunchukState.C)
-				{
-					sendMotorParams(joyXConverted, -joyXConverted, joyXConverted, -joyXConverted);
+					//if ((JoyXOld != joyXConverted) || (JoyYOld != joyYConverted))
+					//if (timeElapsed % 10 == 0)
+					{
+						// Enter turning mode if the 'C' button is held down.
+						if (wm.WiimoteState.NunchukState.C)
+						{
+							sendMotorParams(joyXConverted, joyXConverted, joyXConverted, joyXConverted);
+							//sendMotorParams(0, 0, 0, 0);
+						}
+						// Otherwise default to translating mode.
+						else
+						{
+							// See page 4 of Designing Omni-Directional Mobile Robot with Mecanum Wheel
+							// in the mecanum_wheel directory for more information on how the wheels should
+							// be actuated properly.
+							sendMotorParams(joyYConverted + joyXConverted, -(joyYConverted - joyXConverted),
+								joyYConverted - joyXConverted, -(joyYConverted + joyXConverted));
+							//sendMotorParams(0, 0, 0, 0);
+						}
+					}
 				}
-				// Otherwise default to translating mode.
-				else
-				{
-					// See page 4 of Designing Omni-Directional Mobile Robot with Mecanum Wheel
-					// in the mecanum_wheel directory for more information on how the wheels should
-					// be actuated properly.
-					sendMotorParams(joyYConverted + joyXConverted, joyYConverted - joyXConverted,
-						joyYConverted - joyXConverted, joyYConverted + joyXConverted);
-				}
+				timeElapsed++;
+				JoyXOld = joyXConverted;
+				JoyYOld = joyYConverted;
 			}
 
 			# endregion
 
+			
 			# region Wiimote buttons/gripper and cutter control
 
 			// Use the B button to toggle the state of the gripper. btnBFlag
@@ -650,6 +686,7 @@ namespace Jerry_Sanders_2010
 				btnHomeFlag = false;
 
 			# endregion
+			
 
 			# region Arm control
 			// TODO: Forward and Inverse Kinematics of the arm once we get
@@ -669,5 +706,20 @@ namespace Jerry_Sanders_2010
 
 
 		#endregion
+
+		# region Delegates
+
+		private void DebugText(string s)
+		{
+			this.txtDebugSerialOut.ResetText();
+			this.txtDebugSerialOut.AppendText(s);
+		}
+
+		# endregion
+
+		private void tmr_SendSerial_Tick(object sender, EventArgs e)
+		{
+			sendSerialData(motorString);
+		}
 	}
 }

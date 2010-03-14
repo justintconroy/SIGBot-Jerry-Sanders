@@ -58,13 +58,13 @@
 			this.btnOpenCloseCutter = new System.Windows.Forms.Button();
 			this.btnResetSerialDisplay = new System.Windows.Forms.Button();
 			this.lblSerialOutputDebug = new System.Windows.Forms.Label();
+			this.tmr_SendSerial = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
 			// serialArduino
 			// 
 			this.serialArduino.PortName = "COM41";
 			this.serialArduino.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialArduino_DataReceived);
-			//this.serialArduino.Encoding = System.Text.Encoding.UTF8;
 			// 
 			// label1
 			// 
@@ -102,13 +102,13 @@
 			this.serialDisplay.Multiline = true;
 			this.serialDisplay.Name = "serialDisplay";
 			this.serialDisplay.ReadOnly = true;
-			this.serialDisplay.Size = new System.Drawing.Size(156, 153);
+			this.serialDisplay.Size = new System.Drawing.Size(156, 183);
 			this.serialDisplay.TabIndex = 12;
 			this.serialDisplay.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.serialDisplay_KeyPress);
 			// 
 			// txtDebugSerialOut
 			// 
-			this.txtDebugSerialOut.Location = new System.Drawing.Point(12, 256);
+			this.txtDebugSerialOut.Location = new System.Drawing.Point(15, 290);
 			this.txtDebugSerialOut.Name = "txtDebugSerialOut";
 			this.txtDebugSerialOut.Size = new System.Drawing.Size(156, 20);
 			this.txtDebugSerialOut.TabIndex = 14;
@@ -119,7 +119,7 @@
 			this.txtMotorA.Name = "txtMotorA";
 			this.txtMotorA.Size = new System.Drawing.Size(50, 20);
 			this.txtMotorA.TabIndex = 0;
-			this.txtMotorA.Text = "-38";
+			this.txtMotorA.Text = "0";
 			// 
 			// txtMotorB
 			// 
@@ -127,7 +127,7 @@
 			this.txtMotorB.Name = "txtMotorB";
 			this.txtMotorB.Size = new System.Drawing.Size(50, 20);
 			this.txtMotorB.TabIndex = 1;
-			this.txtMotorB.Text = "-37";
+			this.txtMotorB.Text = "0";
 			// 
 			// txtMotorC
 			// 
@@ -135,7 +135,7 @@
 			this.txtMotorC.Name = "txtMotorC";
 			this.txtMotorC.Size = new System.Drawing.Size(50, 20);
 			this.txtMotorC.TabIndex = 2;
-			this.txtMotorC.Text = "-36";
+			this.txtMotorC.Text = "0";
 			// 
 			// txtMotorD
 			// 
@@ -143,7 +143,7 @@
 			this.txtMotorD.Name = "txtMotorD";
 			this.txtMotorD.Size = new System.Drawing.Size(50, 20);
 			this.txtMotorD.TabIndex = 3;
-			this.txtMotorD.Text = "-35";
+			this.txtMotorD.Text = "0";
 			// 
 			// txtServo1
 			// 
@@ -151,15 +151,15 @@
 			this.txtServo1.Name = "txtServo1";
 			this.txtServo1.Size = new System.Drawing.Size(50, 20);
 			this.txtServo1.TabIndex = 4;
-			this.txtServo1.Text = "56";
+			this.txtServo1.Text = "90";
 			// 
 			// txtServo2
 			// 
-			this.txtServo2.Location = new System.Drawing.Point(335, 60);
+			this.txtServo2.Location = new System.Drawing.Point(335, 59);
 			this.txtServo2.Name = "txtServo2";
 			this.txtServo2.Size = new System.Drawing.Size(50, 20);
 			this.txtServo2.TabIndex = 5;
-			this.txtServo2.Text = "57";
+			this.txtServo2.Text = "74";
 			// 
 			// txtServo3
 			// 
@@ -167,7 +167,7 @@
 			this.txtServo3.Name = "txtServo3";
 			this.txtServo3.Size = new System.Drawing.Size(50, 20);
 			this.txtServo3.TabIndex = 6;
-			this.txtServo3.Text = "58";
+			this.txtServo3.Text = "90";
 			// 
 			// lblMotorA
 			// 
@@ -304,7 +304,7 @@
 			// 
 			// btnResetSerialDisplay
 			// 
-			this.btnResetSerialDisplay.Location = new System.Drawing.Point(12, 209);
+			this.btnResetSerialDisplay.Location = new System.Drawing.Point(15, 243);
 			this.btnResetSerialDisplay.Name = "btnResetSerialDisplay";
 			this.btnResetSerialDisplay.Size = new System.Drawing.Size(75, 23);
 			this.btnResetSerialDisplay.TabIndex = 16;
@@ -315,11 +315,17 @@
 			// lblSerialOutputDebug
 			// 
 			this.lblSerialOutputDebug.AutoSize = true;
-			this.lblSerialOutputDebug.Location = new System.Drawing.Point(12, 235);
+			this.lblSerialOutputDebug.Location = new System.Drawing.Point(15, 269);
 			this.lblSerialOutputDebug.Name = "lblSerialOutputDebug";
 			this.lblSerialOutputDebug.Size = new System.Drawing.Size(103, 13);
 			this.lblSerialOutputDebug.TabIndex = 17;
 			this.lblSerialOutputDebug.Text = "Serial Output Debug";
+			// 
+			// tmr_SendSerial
+			// 
+			this.tmr_SendSerial.Enabled = true;
+			this.tmr_SendSerial.Interval = 3;
+			this.tmr_SendSerial.Tick += new System.EventHandler(this.tmr_SendSerial_Tick);
 			// 
 			// jerry5Form
 			// 
@@ -394,6 +400,7 @@
 		private System.Windows.Forms.Button btnOpenCloseCutter;
 		private System.Windows.Forms.Button btnResetSerialDisplay;
 		private System.Windows.Forms.Label lblSerialOutputDebug;
+		private System.Windows.Forms.Timer tmr_SendSerial;
 	}
 }
 

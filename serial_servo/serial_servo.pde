@@ -1,5 +1,13 @@
 #include <Servo.h>
 
+#define GRIPOPEN 70
+#define GRIPCLOSED 150
+#define CUTTEROPEN 70
+#define CUTTERCLOSED 0
+
+int timeint = 0;
+int printflag = 1;
+
 // Driving motors
 Servo motorAServo;
 Servo motorBServo;
@@ -30,6 +38,10 @@ int motorAPin = 14;
 int motorBPin = 15;
 int motorCPin = 16;
 int motorDPin = 17;
+
+int readFlag = 0;
+
+int serialCount;
  
 void setup()
 {
@@ -48,46 +60,63 @@ void setup()
   gripServo.attach(servoGripPin);
   cutterServo.attach(servoCutterPin);
   
+  // Set driving motor values
+  motorAServo.write(90-5);
+  motorBServo.write(90+5);
+  motorCServo.write(90+5);
+  motorDServo.write(90);
+  
+  // Set arm servos
+  waistServo.write(90);
+  shoulderServo.write(74);
+  elbowServo.write(90);
+  
+  gripServo.write(0);
+  cutterServo.write(0); 
+  
+  
   Serial.println("servos_ready");
 }
  
 void loop()
 {
-  //read the serial port and create a string out of what you read
-  //readSerialString(serInBytes, serInIndx);
-  readSerialString();
-  
-  //try to print out collected information. it will do it only if there actually is some info.
-  setServoValues();
- 
+//  if (serialStatus())
+  {
+    readSerialString();
+    setServoValues();
+  } 
 }
  
 void readSerialString() 
 {
-  int sb = 0;  
-  int readFlag = 0;
-  int incoming = Serial.read();
-    
+  int sb = 0;
+  readFlag = 0;
+
   // Do while we don't have a line feed or carriage return
   while (Serial.available() > 0)
   {
     sb = Serial.read();    
     delay(1);
+//    Serial.println(sb);
           
     if (sb == 253)  // start byte
     {
-      //Serial.print("Recieved start byte.\n");
+//      Serial.println("Recieved start byte.");
       readFlag = 1;
+      serialCount = 0;
     }
     else if (sb == 255)
     {
-      //Serial.print("Recieved stop byte.\n");
+//      Serial.println("Recieved stop byte.");
       readFlag = 0;
+      printflag = 1;
+      serInIndx = 0;
       break;
     }
     else
     {
       //Serial.print("Recieved regular text.\n");
+      //Serial.print(sb);
       if (readFlag)
       {
         serInBytes[serInIndx] = sb;
@@ -97,43 +126,90 @@ void readSerialString()
   }  
 }
 
-
 void setServoValues()
 {
+  if (timeint%10 == 0 && printflag)
+  {
+    for (int i = 0; i < 10; i++)
+    {
+      Serial.println(serInBytes[i]);
+    }
+    printflag = 0;
+  }
+  
   // Set driving motor values
-  motorAServo.write(serInBytes[0]);
-  motorBServo.write(serInBytes[1]);
-  motorCServo.write(serInBytes[2]);
+  motorAServo.write(serInBytes[0]-5);
+  motorBServo.write(serInBytes[1]+5);
+  motorCServo.write(serInBytes[2]+5);
   motorDServo.write(serInBytes[3]);
   
+  // Set arm servos
   waistServo.write(serInBytes[4]);
   shoulderServo.write(serInBytes[5]);
   elbowServo.write(serInBytes[6]);
   
+  // set state of gripper and cutter
   int gripPosition, cutterPosition;
-  int gripOpen = 70, gripClosed = 150;
-  int cutterOpen = 70, cutterClosed = 0;
-   
   
   switch (serInBytes[7]) {
     case 0:
-      gripPosition = gripClosed;
-      cutterPosition = cutterClosed;
+      gripPosition = GRIPCLOSED;
+      cutterPosition = CUTTERCLOSED;
       break;
     case 1:
-      gripPosition = gripOpen;
-      cutterPosition = cutterClosed;
+      gripPosition = GRIPOPEN;
+      cutterPosition = CUTTERCLOSED;
       break;
     case 2:
-      gripPosition = gripClosed;
-      cutterPosition = cutterOpen;
+      gripPosition = GRIPCLOSED;
+      cutterPosition = CUTTEROPEN;
       break;
     case 3:
-      gripPosition = gripOpen;
-      cutterPosition = cutterClosed;
-      break;
+      gripPosition = GRIPOPEN;
+      cutterPosition = CUTTERCLOSED;
   }
   
   gripServo.write(gripPosition);
   cutterServo.write(cutterPosition); 
+  
+  timeint++;
+}
+
+int serialStatus()
+{
+  if (serialCount > 1)
+  {
+    if (serialCount%100 == 0)
+    {
+      Serial.println("Timeout recieving serial data.");
+    }
+
+    // Set driving motor values 
+    motorAServo.write(90-5);
+    motorBServo.write(90+5);
+    motorCServo.write(90+5);
+    motorDServo.write(90);
+  
+    // Set arm servos
+    waistServo.write(90);
+    shoulderServo.write(74);
+    elbowServo.write(90);
+  
+    gripServo.write(0);
+    cutterServo.write(0); 
+    
+    if (Serial.available() > 0)
+    {
+      serialCount = 0;
+      return 1;
+    }
+    
+    return 0;
+  }
+  else
+  {
+    serialCount++;
+  }
+  
+  return 1;
 }
