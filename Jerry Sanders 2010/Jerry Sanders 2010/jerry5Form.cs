@@ -59,7 +59,9 @@ using WiimoteLib;
 namespace Jerry_Sanders_2010
 {
 	# region Delegates for cross-thread communication
+
 	public delegate void DelegateDebugText(string s);
+	
 	# endregion
 
 	public partial class jerry5Form : Form
@@ -167,7 +169,7 @@ namespace Jerry_Sanders_2010
 				serialArduino.Close();
 		}
 
-		# region Serial Port stuff (and functions for talking to the motors)
+		# region Serial Port stuff
 
 		/* serialArduino_DataRecieved
 		 * Event handler for processing data from the serial port as it is recieved.
@@ -231,6 +233,10 @@ namespace Jerry_Sanders_2010
 				}
 			}
 		}
+
+		# endregion
+
+		# region Motor Control
 
 		/* sendMotorAndServoParams
 		 * Sends speed and position data for all motors (including arm servos)
@@ -519,6 +525,10 @@ namespace Jerry_Sanders_2010
 			}
 		}
 
+		# endregion
+
+		# region Buttons
+
 		private void btnStartSerial_Click(object sender, EventArgs e)
 		{
 			while (!serialArduino.IsOpen)
@@ -704,7 +714,6 @@ namespace Jerry_Sanders_2010
 				((Wiimote)sender).SetReportType(InputReport.IRAccel, true);
 		}
 
-
 		#endregion
 
 		# region Delegates
@@ -717,6 +726,9 @@ namespace Jerry_Sanders_2010
 
 		# endregion
 
+		/* tmr_SendSerial_Tick
+		 * Sends out messages to the serial port at regular intervals
+		 */
 		private void tmr_SendSerial_Tick(object sender, EventArgs e)
 		{
 			sendSerialData(motorString);

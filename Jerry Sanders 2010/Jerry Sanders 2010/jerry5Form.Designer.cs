@@ -63,7 +63,8 @@
 			// 
 			// serialArduino
 			// 
-			this.serialArduino.PortName = "COM41";
+			this.serialArduino.BaudRate = 115200;
+			this.serialArduino.PortName = "COM17";
 			this.serialArduino.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialArduino_DataReceived);
 			// 
 			// label1
@@ -324,7 +325,7 @@
 			// tmr_SendSerial
 			// 
 			this.tmr_SendSerial.Enabled = true;
-			this.tmr_SendSerial.Interval = 3;
+			this.tmr_SendSerial.Interval = 2;
 			this.tmr_SendSerial.Tick += new System.EventHandler(this.tmr_SendSerial_Tick);
 			// 
 			// jerry5Form
