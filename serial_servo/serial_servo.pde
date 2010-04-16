@@ -45,7 +45,7 @@ int serialCount;
  
 void setup()
 {
-  Serial.begin(9600);         // connect to the serial port
+  Serial.begin(115200);         // connect to the serial port
   
   // attach to motors
   motorAServo.attach(motorAPin);
@@ -71,8 +71,8 @@ void setup()
   shoulderServo.write(74);
   elbowServo.write(90);
   
-  gripServo.write(0);
-  cutterServo.write(0); 
+  gripServo.write(GRIPCLOSED);
+  cutterServo.write(CUTTERCLOSED); 
   
   
   Serial.println("servos_ready");
@@ -92,7 +92,6 @@ void readSerialString()
   int sb = 0;
   readFlag = 0;
 
-  // Do while we don't have a line feed or carriage return
   while (Serial.available() > 0)
   {
     sb = Serial.read();    

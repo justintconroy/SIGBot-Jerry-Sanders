@@ -114,7 +114,7 @@ void printSerialString() {
   
       Serial.println();
       Serial.print("Value to pan servo: ");
-      Serial.println(pval, DEC);
+      Serial.print(pval, DEC);
       
       panServo.write(pval);
       //analogWrite(servoPanPin,pval);
@@ -131,7 +131,7 @@ void printSerialString() {
   
       Serial.println();
       Serial.print("Value to tilt servo: ");
-      Serial.println(tval, DEC);
+      Serial.print(tval, DEC);
       
       tiltServo.write(tval);
       //analogWrite(10, tval);

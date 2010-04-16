@@ -103,6 +103,7 @@
 			this.serialDisplay.Multiline = true;
 			this.serialDisplay.Name = "serialDisplay";
 			this.serialDisplay.ReadOnly = true;
+			this.serialDisplay.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.serialDisplay.Size = new System.Drawing.Size(156, 183);
 			this.serialDisplay.TabIndex = 12;
 			this.serialDisplay.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.serialDisplay_KeyPress);
@@ -307,9 +308,9 @@
 			// 
 			this.btnResetSerialDisplay.Location = new System.Drawing.Point(15, 243);
 			this.btnResetSerialDisplay.Name = "btnResetSerialDisplay";
-			this.btnResetSerialDisplay.Size = new System.Drawing.Size(75, 23);
+			this.btnResetSerialDisplay.Size = new System.Drawing.Size(95, 23);
 			this.btnResetSerialDisplay.TabIndex = 16;
-			this.btnResetSerialDisplay.Text = "Reset Serial Display";
+			this.btnResetSerialDisplay.Text = "Clear Console";
 			this.btnResetSerialDisplay.UseVisualStyleBackColor = true;
 			this.btnResetSerialDisplay.Click += new System.EventHandler(this.btnResetSerialDisplay_Click);
 			// 
@@ -325,7 +326,7 @@
 			// tmr_SendSerial
 			// 
 			this.tmr_SendSerial.Enabled = true;
-			this.tmr_SendSerial.Interval = 2;
+			this.tmr_SendSerial.Interval = 50;
 			this.tmr_SendSerial.Tick += new System.EventHandler(this.tmr_SendSerial_Tick);
 			// 
 			// jerry5Form

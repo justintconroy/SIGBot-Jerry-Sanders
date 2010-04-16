@@ -703,6 +703,10 @@ namespace Jerry_Sanders_2010
 			//       it back from the machine shop and get all the measurements.
 			//       We also need to figure out how we're going to map accelerometer
 			//       movement to movement of the arm.
+			if (wm.WiimoteState.ButtonState.A)
+			{
+				//MoveArm(wm.WiimoteState.AccelState.RawValues.X, wm.WiimoteState.AccelState.RawValues.Y);
+			}
 			# endregion
 		}
 

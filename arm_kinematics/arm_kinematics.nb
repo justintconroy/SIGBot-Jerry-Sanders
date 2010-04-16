@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       145,          7]
-NotebookDataLength[     17311,        565]
-NotebookOptionsPosition[     15489,        505]
-NotebookOutlinePosition[     15832,        520]
-CellTagsIndexPosition[     15789,        517]
+NotebookDataLength[     17533,        565]
+NotebookOptionsPosition[     15710,        505]
+NotebookOutlinePosition[     16053,        520]
+CellTagsIndexPosition[     16010,        517]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -37,16 +37,16 @@ Cell[BoxData[
   SequenceForm["Robotica version ", "3.62", "."],
   Editable->False]], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.476972887884416*^9}],
+  3.476972887884416*^9, 3.480178912010585*^9}],
 
 Cell[BoxData["\<\"Copyright 1993 Board of Trustees, University of \
 Illinois\"\>"], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.4769728878884163`*^9}],
+  3.476972887884416*^9, 3.480178912014585*^9}],
 
 Cell[BoxData["\<\"All rights reserved.\"\>"], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.4769728878914165`*^9}],
+  3.476972887884416*^9, 3.4801789120235853`*^9}],
 
 Cell[BoxData[
  InterpretationBox[
@@ -57,27 +57,27 @@ Cell[BoxData[
   "Email questions, comments, or concerns to ", "m-spong@uiuc.edu", "."],
   Editable->False]], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.4769728878944163`*^9}],
+  3.476972887884416*^9, 3.480178912033586*^9}],
 
 Cell[BoxData["\<\"No dynamics data found.\"\>"], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.476972887970421*^9}],
+  3.476972887884416*^9, 3.4801789120425863`*^9}],
 
 Cell[BoxData["\<\" \"\>"], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.476972887973421*^9}],
+  3.476972887884416*^9, 3.480178912051587*^9}],
 
 Cell[BoxData["\<\"Kinematics Input Data\"\>"], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.476972887975421*^9}],
+  3.476972887884416*^9, 3.4801789120595875`*^9}],
 
 Cell[BoxData["\<\"---------------------\"\>"], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.4769728879774213`*^9}],
+  3.476972887884416*^9, 3.4801789120715885`*^9}],
 
 Cell[BoxData["\<\" \"\>"], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.476972887979421*^9}],
+  3.476972887884416*^9, 3.4801789120855894`*^9}],
 
 Cell[BoxData[
  InterpretationBox[
@@ -282,7 +282,7 @@ Cell[BoxData[
      FortranForm[$CellContext`Q3]}]],
   Editable->False]], "Print",
  CellChangeTimes->{3.4769727644553556`*^9, 3.476972832581253*^9, 
-  3.476972888001423*^9}]
+  3.476972887884416*^9, 3.48017891210159*^9}]
 }, Open  ]]
 }, Open  ]],
 
@@ -522,50 +522,50 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[567, 22, 317, 6, 72, "Input"],
 Cell[CellGroupData[{
-Cell[909, 32, 320, 7, 23, "Print"],
-Cell[1232, 41, 185, 3, 23, "Print"],
-Cell[1420, 46, 147, 2, 23, "Print"],
-Cell[1570, 50, 403, 9, 23, "Print"],
-Cell[1976, 61, 148, 2, 23, "Print"],
-Cell[2127, 65, 126, 2, 23, "Print"],
-Cell[2256, 69, 146, 2, 23, "Print"],
-Cell[2405, 73, 148, 2, 23, "Print"],
-Cell[2556, 77, 126, 2, 23, "Print"],
-Cell[2685, 81, 6083, 203, 83, "Print"]
+Cell[909, 32, 342, 7, 23, "Print"],
+Cell[1254, 41, 205, 3, 23, "Print"],
+Cell[1462, 46, 169, 2, 23, "Print"],
+Cell[1634, 50, 423, 9, 23, "Print"],
+Cell[2060, 61, 172, 2, 23, "Print"],
+Cell[2235, 65, 148, 2, 23, "Print"],
+Cell[2386, 69, 170, 2, 23, "Print"],
+Cell[2559, 73, 170, 2, 23, "Print"],
+Cell[2732, 77, 150, 2, 23, "Print"],
+Cell[2885, 81, 6104, 203, 83, "Print"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[8817, 290, 118, 2, 31, "Input"],
+Cell[9038, 290, 118, 2, 31, "Input"],
 Cell[CellGroupData[{
-Cell[8960, 296, 79, 1, 23, "Print"],
-Cell[9042, 299, 79, 1, 23, "Print"],
-Cell[9124, 302, 97, 1, 23, "Print"],
-Cell[9224, 305, 77, 1, 23, "Print"],
-Cell[9304, 308, 225, 6, 23, "Print"],
-Cell[9532, 316, 227, 6, 23, "Print"],
-Cell[9762, 324, 225, 6, 23, "Print"],
-Cell[9990, 332, 79, 1, 23, "Print"],
-Cell[10072, 335, 79, 1, 23, "Print"],
-Cell[10154, 338, 97, 1, 23, "Print"],
-Cell[10254, 341, 77, 1, 23, "Print"],
-Cell[10334, 344, 82, 1, 23, "Print"],
-Cell[10419, 347, 299, 7, 23, "Print"],
-Cell[10721, 356, 299, 7, 23, "Print"],
-Cell[11023, 365, 299, 7, 23, "Print"],
-Cell[11325, 374, 299, 7, 23, "Print"],
-Cell[11627, 383, 299, 7, 23, "Print"],
-Cell[11929, 392, 297, 7, 23, "Print"],
-Cell[12229, 401, 77, 1, 23, "Print"],
-Cell[12309, 404, 79, 1, 23, "Print"],
-Cell[12391, 407, 94, 1, 23, "Print"],
-Cell[12488, 410, 79, 1, 23, "Print"],
-Cell[12570, 413, 327, 7, 23, "Print"],
-Cell[12900, 422, 79, 1, 23, "Print"]
+Cell[9181, 296, 79, 1, 23, "Print"],
+Cell[9263, 299, 79, 1, 23, "Print"],
+Cell[9345, 302, 97, 1, 23, "Print"],
+Cell[9445, 305, 77, 1, 23, "Print"],
+Cell[9525, 308, 225, 6, 23, "Print"],
+Cell[9753, 316, 227, 6, 23, "Print"],
+Cell[9983, 324, 225, 6, 23, "Print"],
+Cell[10211, 332, 79, 1, 23, "Print"],
+Cell[10293, 335, 79, 1, 23, "Print"],
+Cell[10375, 338, 97, 1, 23, "Print"],
+Cell[10475, 341, 77, 1, 23, "Print"],
+Cell[10555, 344, 82, 1, 23, "Print"],
+Cell[10640, 347, 299, 7, 23, "Print"],
+Cell[10942, 356, 299, 7, 23, "Print"],
+Cell[11244, 365, 299, 7, 23, "Print"],
+Cell[11546, 374, 299, 7, 23, "Print"],
+Cell[11848, 383, 299, 7, 23, "Print"],
+Cell[12150, 392, 297, 7, 23, "Print"],
+Cell[12450, 401, 77, 1, 23, "Print"],
+Cell[12530, 404, 79, 1, 23, "Print"],
+Cell[12612, 407, 94, 1, 23, "Print"],
+Cell[12709, 410, 79, 1, 23, "Print"],
+Cell[12791, 413, 327, 7, 23, "Print"],
+Cell[13121, 422, 79, 1, 23, "Print"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[13028, 429, 218, 5, 31, "Input"],
-Cell[13249, 436, 2224, 66, 118, "Output"]
+Cell[13249, 429, 218, 5, 31, "Input"],
+Cell[13470, 436, 2224, 66, 104, "Output"]
 }, Open  ]]
 }
 ]
