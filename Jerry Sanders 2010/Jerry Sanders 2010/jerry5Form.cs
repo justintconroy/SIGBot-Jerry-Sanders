@@ -699,6 +699,7 @@ namespace Jerry_Sanders_2010
 			
 
 			# region Arm control
+
 			// TODO: Forward and Inverse Kinematics of the arm once we get
 			//       it back from the machine shop and get all the measurements.
 			//       We also need to figure out how we're going to map accelerometer
@@ -707,6 +708,7 @@ namespace Jerry_Sanders_2010
 			{
 				//MoveArm(wm.WiimoteState.AccelState.RawValues.X, wm.WiimoteState.AccelState.RawValues.Y);
 			}
+
 			# endregion
 		}
 
