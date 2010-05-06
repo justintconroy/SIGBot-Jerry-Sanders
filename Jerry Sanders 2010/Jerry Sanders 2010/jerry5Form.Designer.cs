@@ -59,6 +59,19 @@
 			this.btnResetSerialDisplay = new System.Windows.Forms.Button();
 			this.lblSerialOutputDebug = new System.Windows.Forms.Label();
 			this.tmr_SendSerial = new System.Windows.Forms.Timer(this.components);
+			this.txtQ1 = new System.Windows.Forms.TextBox();
+			this.txtQ3 = new System.Windows.Forms.TextBox();
+			this.txtQ2 = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label7 = new System.Windows.Forms.Label();
+			this.txtY = new System.Windows.Forms.TextBox();
+			this.txtZ = new System.Windows.Forms.TextBox();
+			this.txtX = new System.Windows.Forms.TextBox();
+			this.btnSetArmPos = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// serialArduino
@@ -329,11 +342,130 @@
 			this.tmr_SendSerial.Interval = 50;
 			this.tmr_SendSerial.Tick += new System.EventHandler(this.tmr_SendSerial_Tick);
 			// 
+			// txtQ1
+			// 
+			this.txtQ1.Location = new System.Drawing.Point(335, 249);
+			this.txtQ1.Name = "txtQ1";
+			this.txtQ1.Size = new System.Drawing.Size(152, 20);
+			this.txtQ1.TabIndex = 18;
+			// 
+			// txtQ3
+			// 
+			this.txtQ3.Location = new System.Drawing.Point(335, 301);
+			this.txtQ3.Name = "txtQ3";
+			this.txtQ3.Size = new System.Drawing.Size(152, 20);
+			this.txtQ3.TabIndex = 19;
+			// 
+			// txtQ2
+			// 
+			this.txtQ2.Location = new System.Drawing.Point(335, 275);
+			this.txtQ2.Name = "txtQ2";
+			this.txtQ2.Size = new System.Drawing.Size(152, 20);
+			this.txtQ2.TabIndex = 20;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(306, 253);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(21, 13);
+			this.label2.TabIndex = 21;
+			this.label2.Text = "Q1";
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(308, 279);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(21, 13);
+			this.label3.TabIndex = 22;
+			this.label3.Text = "Q2";
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(308, 305);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(21, 13);
+			this.label4.TabIndex = 23;
+			this.label4.Text = "Q3";
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(184, 306);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(14, 13);
+			this.label5.TabIndex = 29;
+			this.label5.Text = "Z";
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(184, 280);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(14, 13);
+			this.label6.TabIndex = 28;
+			this.label6.Text = "Y";
+			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(182, 254);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(14, 13);
+			this.label7.TabIndex = 27;
+			this.label7.Text = "X";
+			// 
+			// txtY
+			// 
+			this.txtY.Location = new System.Drawing.Point(211, 276);
+			this.txtY.Name = "txtY";
+			this.txtY.Size = new System.Drawing.Size(89, 20);
+			this.txtY.TabIndex = 26;
+			// 
+			// txtZ
+			// 
+			this.txtZ.Location = new System.Drawing.Point(211, 302);
+			this.txtZ.Name = "txtZ";
+			this.txtZ.Size = new System.Drawing.Size(89, 20);
+			this.txtZ.TabIndex = 25;
+			// 
+			// txtX
+			// 
+			this.txtX.Location = new System.Drawing.Point(211, 250);
+			this.txtX.Name = "txtX";
+			this.txtX.Size = new System.Drawing.Size(89, 20);
+			this.txtX.TabIndex = 24;
+			// 
+			// btnSetArmPos
+			// 
+			this.btnSetArmPos.Location = new System.Drawing.Point(205, 328);
+			this.btnSetArmPos.Name = "btnSetArmPos";
+			this.btnSetArmPos.Size = new System.Drawing.Size(95, 23);
+			this.btnSetArmPos.TabIndex = 30;
+			this.btnSetArmPos.Text = "Set Arm Position";
+			this.btnSetArmPos.UseVisualStyleBackColor = true;
+			this.btnSetArmPos.Click += new System.EventHandler(this.btnSetArmPos_Click);
+			// 
 			// jerry5Form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(499, 356);
+			this.Controls.Add(this.btnSetArmPos);
+			this.Controls.Add(this.label5);
+			this.Controls.Add(this.label6);
+			this.Controls.Add(this.label7);
+			this.Controls.Add(this.txtY);
+			this.Controls.Add(this.txtZ);
+			this.Controls.Add(this.txtX);
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.txtQ2);
+			this.Controls.Add(this.txtQ3);
+			this.Controls.Add(this.txtQ1);
 			this.Controls.Add(this.lblSerialOutputDebug);
 			this.Controls.Add(this.btnResetSerialDisplay);
 			this.Controls.Add(this.btnOpenCloseCutter);
@@ -403,6 +535,19 @@
 		private System.Windows.Forms.Button btnResetSerialDisplay;
 		private System.Windows.Forms.Label lblSerialOutputDebug;
 		private System.Windows.Forms.Timer tmr_SendSerial;
+		private System.Windows.Forms.TextBox txtQ1;
+		private System.Windows.Forms.TextBox txtQ3;
+		private System.Windows.Forms.TextBox txtQ2;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.TextBox txtY;
+		private System.Windows.Forms.TextBox txtZ;
+		private System.Windows.Forms.TextBox txtX;
+		private System.Windows.Forms.Button btnSetArmPos;
 	}
 }
 

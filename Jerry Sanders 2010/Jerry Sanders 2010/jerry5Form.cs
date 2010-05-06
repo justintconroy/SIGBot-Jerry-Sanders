@@ -37,11 +37,11 @@
  *      gripper ==|\\
  *       cutter ==||\\
  *                   \\
- *                    == servo3 (elbow joint)
+ *                    OO servo3 (elbow joint)
  *                    ||
  *                    ||
  *                    ||
- *                    == servo2 (shoulder joint)
+ *                    OO servo2 (shoulder joint)
  *                    == servo1 (rotates entire arm)
  *                    
  */
@@ -61,6 +61,9 @@ namespace Jerry_Sanders_2010
 	# region Delegates for cross-thread communication
 
 	public delegate void DelegateDebugText(string s);
+	public delegate void DelegateQ1Text(string s);
+	public delegate void DelegateQ2Text(string s);
+	public delegate void DelegateQ3Text(string s);
 	
 	# endregion
 
@@ -68,6 +71,9 @@ namespace Jerry_Sanders_2010
 	{
 
 		public DelegateDebugText m_DelegateDebugText;
+		public DelegateQ1Text m_DelegateQ1Text;
+		public DelegateQ2Text m_DelegateQ2Text;
+		public DelegateQ3Text m_DelegateQ3Text;
 
 		# region Local Variables
 
@@ -118,6 +124,9 @@ namespace Jerry_Sanders_2010
 		{
 			InitializeComponent();
 			m_DelegateDebugText = new DelegateDebugText(this.DebugText);
+			m_DelegateQ1Text = new DelegateQ1Text(this.Q1Text);
+			m_DelegateQ2Text = new DelegateQ2Text(this.Q2Text);
+			m_DelegateQ3Text = new DelegateQ3Text(this.Q3Text);
 			//sendSerialData("");
 		}
 
@@ -219,12 +228,16 @@ namespace Jerry_Sanders_2010
 			{
 				byte[] TxBuffer = new byte[TxData.Length + 2];
 				TxBuffer[0] = 0xFD;
-				for (int i = 1; i < TxData.Length; i++)
+				for (int i = 0; i < TxData.Length; i++)
 				{
-					TxBuffer[i] = (byte)TxData[i - 1];
+					TxBuffer[i + 1] = (byte)TxData[i];
 				}
 				TxBuffer[TxData.Length + 1] = 0xFF;
+
+				// For debugging purposes, print the data to a textbox on the Windows Form
 				this.Invoke(this.m_DelegateDebugText, new object[] { TxData });
+
+				// Send the data to the arduino
 				if (serialArduino.IsOpen)
 				{
 					serialArduino.Write(TxBuffer, 0, TxBuffer.Length);
@@ -391,6 +404,15 @@ namespace Jerry_Sanders_2010
 
 		void openGripper()
 		{
+			GripperCurrentPosition = 0;
+			sendMotorAndServoParams(motorACurrentSpeed, motorBCurrentSpeed,
+				motorCCurrentSpeed, motorDCurrentSpeed, servo1CurrentPosition,
+				servo2CurrentPosition, servo3CurrentPosition,
+				GripperCurrentPosition, CutterCurrentPosition);
+
+			wm.SetLEDs(1);
+
+			/*
 			// temporary motor variables (as single bytes)
 			char[] motorBytes = new char[8];
 
@@ -406,18 +428,27 @@ namespace Jerry_Sanders_2010
 			motorBytes[5] = (char)servo2CurrentPosition;
 			motorBytes[6] = (char)servo3CurrentPosition;
 
-			motorBytes[7] = (char)((CutterCurrentPosition << 1));
+			// Keep the old cutter position while setting gripper position to 0
+			motorBytes[7] = (char)((CutterCurrentPosition << 1) & 0x10);
 
 			motorString = new string(motorBytes);
 
-			sendSerialData(motorString);
+			//sendSerialData(motorString);
+			*/
 
-			GripperCurrentPosition = 0;
 
 		}
 
 		void closeGripper()
 		{
+			GripperCurrentPosition = 1;
+			sendMotorAndServoParams(motorACurrentSpeed, motorBCurrentSpeed,
+				motorCCurrentSpeed, motorDCurrentSpeed, servo1CurrentPosition,
+				servo2CurrentPosition, servo3CurrentPosition,
+				GripperCurrentPosition, CutterCurrentPosition);
+
+			wm.SetLEDs(2);
+			/*
 			// temporary motor variables (as single bytes)
 			char[] motorBytes = new char[8];
 
@@ -433,18 +464,25 @@ namespace Jerry_Sanders_2010
 			motorBytes[5] = (char)servo2CurrentPosition;
 			motorBytes[6] = (char)servo3CurrentPosition;
 
-			motorBytes[7] = (char)((CutterCurrentPosition << 1) + 0x01);
+			// Keep old cutter position while changing gripper position to 1
+			motorBytes[7] = (char)((CutterCurrentPosition << 1) | 0x01);
 
 			motorString = new string(motorBytes);
 
-			sendSerialData(motorString);
+			//sendSerialData(motorString);
+			*/
 
-			GripperCurrentPosition = 1;
 
 		}
 
 		void openCutter()
 		{
+			CutterCurrentPosition = 0;
+			sendMotorAndServoParams(motorACurrentSpeed, motorBCurrentSpeed,
+				motorCCurrentSpeed, motorDCurrentSpeed, servo1CurrentPosition,
+				servo2CurrentPosition, servo3CurrentPosition,
+				GripperCurrentPosition, CutterCurrentPosition);
+			/*
 			// temporary motor variables (as single bytes)
 			char[] motorBytes = new char[8];
 
@@ -460,18 +498,25 @@ namespace Jerry_Sanders_2010
 			motorBytes[5] = (char)servo2CurrentPosition;
 			motorBytes[6] = (char)servo3CurrentPosition;
 
-			motorBytes[7] = (char)(GripperCurrentPosition);
+			// Keep old gripper position, changing cutter position to 0
+			motorBytes[7] = (char)((GripperCurrentPosition) & 0x01);
 
 			motorString = new string(motorBytes);
 
-			sendSerialData(motorString);
-
-			CutterCurrentPosition = 0;
+			//sendSerialData(motorString);
+			*/
+			
 
 		}
 
 		void closeCutter()
 		{
+			CutterCurrentPosition = 1;
+			sendMotorAndServoParams(motorACurrentSpeed, motorBCurrentSpeed,
+				motorCCurrentSpeed, motorDCurrentSpeed, servo1CurrentPosition,
+				servo2CurrentPosition, servo3CurrentPosition,
+				GripperCurrentPosition, CutterCurrentPosition);
+			/*
 			// temporary motor variables (as single bytes)
 			char[] motorBytes = new char[8];
 
@@ -487,13 +532,13 @@ namespace Jerry_Sanders_2010
 			motorBytes[5] = (char)servo2CurrentPosition;
 			motorBytes[6] = (char)servo3CurrentPosition;
 
-			motorBytes[7] = (char)(GripperCurrentPosition + 0x10);
+			// Keep old gripper position, setting cutter position to 1
+			motorBytes[7] = (char)(GripperCurrentPosition | 0x10);
 
 			motorString = new string(motorBytes);
 
-			sendSerialData(motorString);
-
-			CutterCurrentPosition = 1;
+			//sendSerialData(motorString);
+			*/
 
 		}
 
@@ -527,7 +572,12 @@ namespace Jerry_Sanders_2010
 
 		# endregion
 
-		# region Buttons
+		# region Form Buttons
+
+		private void btnSetArmPos_Click(object sender, EventArgs e)
+		{
+			MoveArm(Convert.ToInt32(txtX.Text), Convert.ToInt32(txtY.Text), Convert.ToInt32(txtZ.Text));
+		}
 
 		private void btnStartSerial_Click(object sender, EventArgs e)
 		{
@@ -706,7 +756,8 @@ namespace Jerry_Sanders_2010
 			//       movement to movement of the arm.
 			if (wm.WiimoteState.ButtonState.A)
 			{
-				//MoveArm(wm.WiimoteState.AccelState.RawValues.X, wm.WiimoteState.AccelState.RawValues.Y);
+				//MoveArm(wm.WiimoteState.AccelState.RawValues.X, wm.WiimoteState.AccelState.RawValues.Y, 1);
+				MoveArm(5, 5, 5);
 			}
 
 			# endregion
@@ -730,6 +781,24 @@ namespace Jerry_Sanders_2010
 			this.txtDebugSerialOut.AppendText(s);
 		}
 
+		private void Q1Text(string s)
+		{
+			this.txtQ1.ResetText();
+			this.txtQ1.AppendText(s);
+		}
+
+		private void Q2Text(string s)
+		{
+			this.txtQ2.ResetText();
+			this.txtQ2.AppendText(s);
+		}
+
+		private void Q3Text(string s)
+		{
+			this.txtQ3.ResetText();
+			this.txtQ3.AppendText(s);
+		}
+
 		# endregion
 
 		/* tmr_SendSerial_Tick
@@ -738,6 +807,10 @@ namespace Jerry_Sanders_2010
 		private void tmr_SendSerial_Tick(object sender, EventArgs e)
 		{
 			sendSerialData(motorString);
+			chkCutter.Checked = (CutterCurrentPosition == 1);
+			chkGripper.Checked = (GripperCurrentPosition == 1);
 		}
+
+		
 	}
 }

@@ -52,7 +52,6 @@ int serialCount;
 void setup()
 {
   Serial.begin(115200);         // connect to the serial port
-  //Serial.begin(9600);
   
   // attach to motors
   motorAServo.attach(motorAPin);
@@ -80,11 +79,6 @@ void setup()
   
   gripServo.write(GRIPCLOSED);
   cutterServo.write(CUTTERCLOSED); 
-  
-  for (int i = 0; i < 80; i++)
-  {
-    serInBytes[i] = 90;
-  }
   
   
   Serial.println("servos_ready");
@@ -141,11 +135,10 @@ void setServoValues()
 {
   if (timeint%10 == 0 && printflag)
   {
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 10; i++)
     {
       Serial.println(serInBytes[i]);
     }
-    Serial.println("===");
     printflag = 0;
   }
   
